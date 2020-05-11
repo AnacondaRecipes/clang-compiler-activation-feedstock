@@ -1,4 +1,5 @@
-{% set version = "9.0.1" %}
+{% set version = "10.0.0" %}
+{% set libcxx_version = "10.0.0" %}
 
 package:
   name: clang-compiler-activation
@@ -7,7 +8,7 @@ package:
 # Not strictly needed but enables automatic updates from the bot
 source:
   url: https://github.com/llvm/llvm-project/releases/download/llvmorg-{{ version }}/clang-{{ version }}.src.tar.xz
-  sha256: 5778512b2e065c204010f88777d44b95250671103e434f9dc7363ab2e3804253
+  sha256: 885b062b00e903df72631c5f98b9579ed1ed2790f74e5646b4234fa084eacb21
 
 build:
   skip: True  # [win]
@@ -15,8 +16,8 @@ build:
 
 requirements:
   build:
-    - libcxx {{ version }}
-
+    - libcxx {{ libcxx_version }}
+    - llvm-openmp {{ version }}  # [osx]
 outputs:
   - name: clang_{{ cross_target_platform }}
     script: install-clang.sh
@@ -24,6 +25,7 @@ outputs:
       - clang {{ version }}
       - cctools
       - ld64
+      - llvm-openmp {{ version }}   # [osx]
       # This brings in libraries for linux too. Split this again?
       - compiler-rt {{ version }}
       - compiler-rt_{{ cross_target_platform }} {{ version }}
@@ -36,7 +38,7 @@ outputs:
     requirements:
       host:
         - clangxx {{ version }}
-        - libcxx {{ version }}  # [osx]
+        - libcxx >={{ libcxx_version }}  # [osx]
         - {{ pin_subpackage('clang_' ~ cross_target_platform, min_pin='x.x.x.x.x.x.x.x', max_pin='x.x.x.x.x.x.x.x') }}
       run:
         - clangxx {{ version }}
@@ -47,7 +49,7 @@ outputs:
     # (here I would like the run dependency on clangxx to pull in the run_exports from it).
     run_exports:
       strong:
-        - libcxx >={{ version }}
+        - libcxx >={{ libcxx_version }}
     test:
       commands:
         - {{ macos_machine }}-clang++ --version    # [osx]
@@ -56,7 +58,7 @@ outputs:
     requirements:
       host:
         - clangxx {{ version }}
-        - libcxx {{ version }}
+        - libcxx >={{ libcxx_version }}
         - cctools                                  # [osx]
         - ld64                                     # [osx]
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
