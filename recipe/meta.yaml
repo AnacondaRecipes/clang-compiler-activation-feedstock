@@ -17,7 +17,6 @@ build:
 requirements:
   build:
     - libcxx {{ libcxx_version }}
-    - llvm-openmp {{ version }}  # [osx]
 outputs:
   - name: clang_{{ cross_target_platform }}
     script: install-clang.sh
