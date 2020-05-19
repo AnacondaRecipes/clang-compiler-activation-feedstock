@@ -12,7 +12,7 @@ source:
 
 build:
   skip: True  # [win]
-  number: 0
+  number: 1
 
 requirements:
   build:
@@ -24,6 +24,7 @@ outputs:
       - clang {{ version }}
       - cctools
       - ld64
+      - llvm-tools {{ version }}
       - llvm-openmp {{ version }}   # [osx]
       # This brings in libraries for linux too. Split this again?
       - compiler-rt {{ version }}
