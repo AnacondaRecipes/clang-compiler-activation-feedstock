@@ -30,8 +30,6 @@ function _get_sourced_filename() {
 #  a fatal error if a program is identified but not present.
 function _tc_activation() {
   local act_nature=$1; shift
-  local tc_nature=$1; shift
-  local tc_machine=$1; shift
   local tc_prefix=$1; shift
   local thing
   local newval
@@ -48,22 +46,22 @@ function _tc_activation() {
   fi
 
   for pass in check apply; do
-    for thing in $tc_nature,$tc_machine "$@"; do
+    for thing in "$@"; do
       case "${thing}" in
         *,*)
           newval=$(echo "${thing}" | sed "s,^[^\,]*\,\(.*\),\1,")
           thing=$(echo "${thing}" | sed "s,^\([^\,]*\)\,.*,\1,")
           ;;
         *)
-          newval="${CONDA_PREFIX}/bin/${tc_prefix}${thing}"
-          if [ ! -x "${newval}" -a "${pass}" = "check" ]; then
-            echo "ERROR: This cross-compiler package contains no program ${newval}"
+          newval="${tc_prefix}${thing}"
+          thing=$(echo ${thing} | tr 'a-z+-' 'A-ZX_')
+          if [ ! -x "${CONDA_PREFIX}/bin/${newval}" -a "${pass}" = "check" ]; then
+            echo "ERROR: This cross-compiler package contains no program ${CONDA_PREFIX}/bin/${newval}"
             return 1
           fi
           ;;
       esac
       if [ "${pass}" = "apply" ]; then
-        thing=$(echo ${thing} | tr 'a-z+-' 'A-ZX_')
         eval oldval="\$${from}$thing"
         if [ -n "${oldval}" ]; then
           eval export "${to}'${thing}'=\"${oldval}\""
@@ -80,6 +78,9 @@ function _tc_activation() {
   done
   return 0
 }
+
+
+function deactivate_clang() {
 
 # When people are using conda-build, assume that adding rpath during build, and pointing at
 #    the host env's includes and libs is helpful default behavior
@@ -99,6 +100,10 @@ else
   CMAKE_PREFIX_PATH_USED="${CMAKE_PREFIX_PATH}:${CONDA_PREFIX}"
 fi
 
+if [ "${MACOSX_DEPLOYMENT_TARGET:-0}" != "0" ]; then
+  CPPFLAGS_USED="$CPPFLAGS_USED -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}"
+fi
+
 if [ "${CONDA_BUILD:-0}" = "1" ]; then
   if [ -f /tmp/old-env-$$.txt ]; then
     rm -f /tmp/old-env-$$.txt || true
@@ -106,13 +111,29 @@ if [ "${CONDA_BUILD:-0}" = "1" ]; then
   env > /tmp/old-env-$$.txt
 fi
 
+CONDA_BUILD_SYSROOT_TEMP=${CONDA_BUILD_SYSROOT:-${SDKROOT:-0}}
+if [ "${CONDA_BUILD_SYSROOT_TEMP}" = "0" ]; then
+   CONDA_BUILD_SYSROOT_TEMP=$(xcrun --show-sdk-path)
+fi
+
+if [ "${CONDA_BUILD:-0}" = "1" ]; then
+  # in conda build we need to unset CONDA_BUILD_SYSROOT
+  _tc_activation \
+    deactivate @CHOST@- \
+    "CONDA_BUILD_SYSROOT,${CONDA_BUILD_SYSROOT_TEMP}"
+fi
+
 _tc_activation \
-  deactivate host @CHOST@ @CHOST@- \
-  ar as checksyms codesign_allocate indr install_name_tool libtool lipo nm nmedit otool \
+  deactivate @CHOST@- "HOST,@CHOST@" \
+  "CONDA_TOOLCHAIN_HOST,@CHOST@" \
+  "CONDA_TOOLCHAIN_BUILD,@CBUILD@" \
+  ar as checksyms indr install_name_tool libtool lipo nm nmedit otool \
   pagestuff ranlib redo_prebinding seg_addr_table seg_hack segedit size strings strip \
-  ld \
-  clang \
+  clang ld \
   "CC,${CC:-@CHOST@-clang}" \
+  "OBJC,${OBJC:-@CHOST@-clang}" \
+  "CC_FOR_BUILD,${CONDA_PREFIX}/bin/@CC_FOR_BUILD@" \
+  "OBJC_FOR_BUILD,${CONDA_PREFIX}/bin/@OBJC_FOR_BUILD@" \
   "CPPFLAGS,${CPPFLAGS:-${CPPFLAGS_USED}}" \
   "CFLAGS,${CFLAGS:-${CFLAGS_USED}}" \
   "LDFLAGS,${LDFLAGS:-${LDFLAGS_USED}}" \
@@ -121,7 +142,16 @@ _tc_activation \
   "_CONDA_PYTHON_SYSCONFIGDATA_NAME,${_CONDA_PYTHON_SYSCONFIGDATA_NAME:-@_PYTHON_SYSCONFIGDATA_NAME@}" \
   "CMAKE_PREFIX_PATH,${CMAKE_PREFIX_PATH:-${CMAKE_PREFIX_PATH_USED}}" \
   "CONDA_BUILD_CROSS_COMPILATION,@CONDA_BUILD_CROSS_COMPILATION@" \
-  "CONDA_BUILD_SYSROOT,${CONDA_BUILD_SYSROOT:-$(xcrun --show-sdk-path)}"
+  "SDKROOT,${CONDA_BUILD_SYSROOT_TEMP}" \
+  "CMAKE_ARGS,${_CMAKE_ARGS:-}" \
+  "MESON_ARGS,${_MESON_ARGS:-}" \
+  "ac_cv_func_malloc_0_nonnull,yes" \
+  "ac_cv_func_realloc_0_nonnull,yes" \
+  "host_alias,@CHOST@" \
+  "build_alias,@CBUILD@" \
+  "BUILD,@CBUILD@"
+
+unset CONDA_BUILD_SYSROOT_TEMP
 
 if [ $? -ne 0 ]; then
   echo "ERROR: $(_get_sourced_filename) failed, see above for details"
@@ -136,4 +166,17 @@ else
     diff -U 0 -rN /tmp/old-env-$$.txt /tmp/new-env-$$.txt | tail -n +4 | grep "^-.*\|^+.*" | grep -v "CONDA_BACKUP_" | sort
     rm -f /tmp/old-env-$$.txt /tmp/new-env-$$.txt || true
   fi
+
+  # unfix prompt for zsh
+  if [[ -n "${ZSH_NAME:-}" ]]; then
+    precmd_functions=(${precmd_functions:#_conda_clang_precmd})
+    preexec_functions=(${preexec_functions:#_conda_clang_preexec})
+  fi
+fi
+}
+
+if [ "${CONDA_BUILD_STATE:-0}" = "BUILD" ] && [ "${target_platform:-@TARGET_PLATFORM@}" != "@TARGET_PLATFORM@" ]; then
+  echo "Not deactivating environment because this compiler is not expected."
+else
+  deactivate_clang
 fi

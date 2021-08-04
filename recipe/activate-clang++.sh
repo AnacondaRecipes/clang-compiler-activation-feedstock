@@ -30,8 +30,6 @@ function _get_sourced_filename() {
 #  a fatal error if a program is identified but not present.
 function _tc_activation() {
   local act_nature=$1; shift
-  local tc_nature=$1; shift
-  local tc_machine=$1; shift
   local tc_prefix=$1; shift
   local thing
   local newval
@@ -48,22 +46,22 @@ function _tc_activation() {
   fi
 
   for pass in check apply; do
-    for thing in $tc_nature,$tc_machine "$@"; do
+    for thing in "$@"; do
       case "${thing}" in
         *,*)
           newval=$(echo "${thing}" | sed "s,^[^\,]*\,\(.*\),\1,")
           thing=$(echo "${thing}" | sed "s,^\([^\,]*\)\,.*,\1,")
           ;;
         *)
-          newval="${CONDA_PREFIX}/bin/${tc_prefix}${thing}"
-          if [ ! -x "${newval}" -a "${pass}" = "check" ]; then
-            echo "ERROR: This cross-compiler package contains no program ${newval}"
+          newval="${tc_prefix}${thing}"
+          thing=$(echo ${thing} | tr 'a-z+-' 'A-ZX_')
+          if [ ! -x "${CONDA_PREFIX}/bin/${newval}" -a "${pass}" = "check" ]; then
+            echo "ERROR: This cross-compiler package contains no program ${CONDA_PREFIX}/bin/${newval}"
             return 1
           fi
           ;;
       esac
       if [ "${pass}" = "apply" ]; then
-        thing=$(echo ${thing} | tr 'a-z+-' 'A-ZX_')
         eval oldval="\$${from}$thing"
         if [ -n "${oldval}" ]; then
           eval export "${to}'${thing}'=\"${oldval}\""
@@ -81,6 +79,7 @@ function _tc_activation() {
   return 0
 }
 
+function activate_clangxx() {
 # When people are using conda-build, assume that adding rpath during build, and pointing at
 #    the host env's includes and libs is helpful default behavior
 if [ "${CONDA_BUILD:-0}" = "1" ]; then
@@ -99,9 +98,10 @@ if [ "${CONDA_BUILD:-0}" = "1" ]; then
 fi
 
 _tc_activation \
-  activate host @CHOST@ @CHOST@- \
+  activate @CHOST@- \
   clang++ \
   "CXX,${CXX:-@CHOST@-clang++}" \
+  "CXX_FOR_BUILD,${CONDA_PREFIX}/bin/@CXX_FOR_BUILD@" \
   "CXXFLAGS,${CXXFLAGS:-${CXXFLAGS_USED}}" \
   "DEBUG_CXXFLAGS,${DEBUG_CXXFLAGS:-${DEBUG_CXXFLAGS_USED}}"
 
@@ -118,4 +118,11 @@ else
     diff -U 0 -rN /tmp/old-env-$$.txt /tmp/new-env-$$.txt | tail -n +4 | grep "^-.*\|^+.*" | grep -v "CONDA_BACKUP_" | sort
     rm -f /tmp/old-env-$$.txt /tmp/new-env-$$.txt || true
   fi
+fi
+}
+
+if [ "${CONDA_BUILD_STATE:-0}" = "BUILD" ] && [ "${target_platform:-@TARGET_PLATFORM@}" != "@TARGET_PLATFORM@" ]; then
+   echo "Not activating environment because this compiler is not expected."
+else
+  activate_clangxx
 fi
