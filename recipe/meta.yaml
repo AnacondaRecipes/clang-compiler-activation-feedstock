@@ -1,25 +1,30 @@
-{% set version = "12.0.0" %}
+{% if version is not defined %}
+{% set version = "14.0.6" %}
+{% endif %}
 {% set major_ver = version.split(".")[0] %}
+
+{% set build_number = 0 %}
 
 package:
   name: clang-compiler-activation
   version: {{ version }}
 
-# Not strictly needed but enables automatic updates from the bot
-source:
-  url: https://github.com/llvm/llvm-project/releases/download/llvmorg-{{ version.replace(".rc", "-rc") }}/llvm-project-{{ version.replace(".rc", "rc") }}.src.tar.xz
-  sha256: 9ed1688943a4402d7c904cc4515798cdb20080066efa010fe7e1f2551b423628
+# # Originally this was to enable automatic updates from the bot,
+# # but that doesn't work with several LLVM versions at the same time
+# source:
+#   url: https://github.com/llvm/llvm-project/releases/download/llvmorg-{{ version.replace(".rc", "-rc") }}/llvm-project-{{ version.replace(".rc", "rc") }}.src.tar.xz
+#   sha256: 326335a830f2e32d06d0a36393b5455d17dc73e0bd1211065227ee014f92cbf8  # [version == "13.0.1"]
 
 build:
   skip: true  # [win]
-  number: 3
+  number: {{ build_number }}
 
 requirements:
   build:
     - cctools_{{ target_platform }}  # [osx]
     - libcxx {{ version }}
-    - gcc_{{ target_platform }}       # [linux]
-    - clang {{ version }}                  # [osx]
+    - gcc_{{ target_platform }}      # [linux]
+    - clang {{ version }}            # [osx]
 
 outputs:
   - name: clang_{{ cross_target_platform }}
@@ -27,10 +32,10 @@ outputs:
     requirements:
       - clang {{ version }}
       - llvm-tools {{ version }}
-      - cctools_{{ target_platform }}  # [osx]
+      - cctools_{{ target_platform }}        # [osx]
       - cctools_{{ cross_target_platform }}
       - ld64_{{ cross_target_platform }}
-      - ld64_{{ target_platform }}          # [osx]
+      - ld64_{{ target_platform }}           # [osx]
       # this brings in an extra symlink of ld -> x86_64-apple-darwin13.4.0-ld
       # adding these generated an error w/ libtool: https://github.com/conda-forge/libtool-feedstock/issues/24
       # - ld64     # [cross_target_platform == target_platform]
@@ -51,12 +56,12 @@ outputs:
     script: install-clangxx.sh
     requirements:
       build:
-        - cctools_{{ target_platform }}  # [osx]
+        - cctools_{{ target_platform }}   # [osx]
       host:
         - clangxx {{ version }}
-        - libcxx {{ version }}  # [osx]
+        - libcxx {{ version }}            # [osx]
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
-        - gxx_impl_{{ target_platform }}     # [linux]
+        - gxx_impl_{{ target_platform }}  # [linux]
         # hack to force the solver to work
         - libllvm{{ major_ver }} {{ version }}
       run:
@@ -64,7 +69,7 @@ outputs:
         # This is not needed in Linux for cross-compiling in a conda-build env, but is needed outside
         - libcxx >={{ version }}
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
-        - gxx_impl_{{ target_platform }}     # [linux]
+        - gxx_impl_{{ target_platform }}  # [linux]
     # Since transitive run_exports are not currently possible
     # (here I would like the run dependency on clangxx to pull in the run_exports from it).
     run_exports:
@@ -88,7 +93,7 @@ outputs:
         - cctools_{{ target_platform }}  # [osx]
       host:
         - clangxx {{ version }}
-        - libcxx {{ version }}                # [cross_target_platform in ("osx-64", "osx-arm64")]
+        - libcxx {{ version }}           # [cross_target_platform in ("osx-64", "osx-arm64")]
         - cctools_{{ cross_target_platform }}
         - ld64_{{ cross_target_platform }}
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
@@ -120,7 +125,7 @@ outputs:
       summary: clang compiler components in one package for bootstrapping clang
 
 about:
-  home: http://github.com/AnacondaRecipes/aggregate
+  home: http://github.com/conda-forge/clang-compiler-activation-feedstock
   license: BSD-3-Clause
   license_family: BSD
   license_file: LICENSE.txt
@@ -131,3 +136,4 @@ extra:
     - isuruf
     - mingwandroid
     - katietz
+    - h-vetinari

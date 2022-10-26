@@ -1,29 +1,30 @@
 cross_target_platform:
   - osx-64     # [x86_64]
-  - osx-arm64  # [arm64]
+  - osx-arm64  # [not x86_64]
 macos_machine:
   - x86_64-apple-darwin13.4.0  # [x86_64]
-  - arm64-apple-darwin20.0.0   # [arm64]
+  - arm64-apple-darwin20.0.0   # [not x86_64]
 CBUILD:
-  - x86_64-conda-linux-gnu      # [linux64]
-  - powerpc64le-conda-linux-gnu      # [linux and ppc64le]
+  - x86_64-conda-linux-gnu       # [linux64]
+  - powerpc64le-conda-linux-gnu  # [linux and ppc64le]
   - aarch64-conda-linux-gnu      # [linux and aarch64]
-  - x86_64-apple-darwin13.4.0   # [osx and x86_64]
-  - arm64-apple-darwin20.0.0    # [osx and arm64]
+  - s390x-conda-linux-gnu        # [linux and s390x]
+  - x86_64-apple-darwin13.4.0    # [osx and x86_64]
+  - arm64-apple-darwin20.0.0     # [osx and arm64]
 uname_machine:
   - x86_64  # [x86_64]
-  - arm64   # [arm64]
+  - arm64   # [not x86_64]
 meson_cpu_family:
-  - x86_64  # [x86_64]
-  - aarch64  # [arm64]
+  - x86_64   # [x86_64]
+  - aarch64  # [not x86_64]
 uname_kernel_release:
   - 13.4.0  # [x86_64]
-  - 20.0.0  # [arm64]
+  - 20.0.0  # [not x86_64]
 MACOSX_DEPLOYMENT_TARGET:  # [linux]
   - 10.9                   # [linux]
 FINAL_PYTHON_SYSCONFIGDATA_NAME:
   - _sysconfigdata_x86_64_apple_darwin13_4_0  # [x86_64]
-  - _sysconfigdata_arm64_apple_darwin20_0_0   # [arm64]
+  - _sysconfigdata_arm64_apple_darwin20_0_0   # [not x86_64]
 zip_keys:
   - - cross_target_platform
     - macos_machine
@@ -31,3 +32,5 @@ zip_keys:
     - uname_machine
     - uname_kernel_release
     - FINAL_PYTHON_SYSCONFIGDATA_NAME
+version:
+  - 14.0.6
