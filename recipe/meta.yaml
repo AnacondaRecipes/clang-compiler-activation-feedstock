@@ -125,13 +125,15 @@ outputs:
       summary: clang compiler components in one package for bootstrapping clang
 
 about:
-  home: http://github.com/AnacondaRecipes/clang-compiler-activation-feedstock
+  home: https://github.com/AnacondaRecipes/clang-compiler-activation-feedstock
   license: BSD-3-Clause
   license_family: BSD
   license_file: LICENSE.txt
+  license_url: https://github.com/AnacondaRecipes/clang-compiler-activation-feedstock/blob/master/LICENSE.txt
+  dev_url: https://github.com/AnacondaRecipes/clang-compiler-activation-feedstock
   summary: clang compilers for conda-build 3
-  doc_url: http://github.com/AnacondaRecipes/clang-compiler-activation-feedstock
-  dev_url: http://github.com/AnacondaRecipes/clang-compiler-activation-feedstock
+  doc_url: https://github.com/AnacondaRecipes/clang-compiler-activation-feedstock
+  dev_url: https://github.com/AnacondaRecipes/clang-compiler-activation-feedstock
 
 extra:
   recipe-maintainers:
