@@ -140,6 +140,7 @@ _MESON_ARGS="--buildtype release"
 
 if [ "${CONDA_BUILD:-0}" = "1" ]; then
   _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_INSTALL_PREFIX=${PREFIX} -DCMAKE_INSTALL_LIBDIR=lib"
+  _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_PROGRAM_PATH=${BUILD_PREFIX}/bin;${PREFIX}/bin"
   _MESON_ARGS="${_MESON_ARGS} --prefix="$PREFIX" -Dlibdir=lib"
 fi
 
@@ -157,7 +158,7 @@ _tc_activation \
   activate @CHOST@- "HOST,@CHOST@" \
   "CONDA_TOOLCHAIN_HOST,@CHOST@" \
   "CONDA_TOOLCHAIN_BUILD,@CBUILD@" \
-  ar as checksyms indr install_name_tool libtool lipo nm nmedit otool \
+  ar as checksyms install_name_tool libtool lipo nm nmedit otool \
   pagestuff ranlib redo_prebinding seg_addr_table seg_hack segedit size strings strip \
   clang ld \
   "CC,${CC:-@CHOST@-clang}" \
