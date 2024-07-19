@@ -22,6 +22,7 @@ build:
 requirements:
   build:
     - cctools_{{ target_platform }}  # [osx]
+    - cctools_{{ target_platform }} =949.0.1=*_25       # [osx and x86_64]
     - libcxx {{ version }}
     - gcc_{{ target_platform }}      # [linux]
     - clang {{ version }}            # [osx]
@@ -33,9 +34,11 @@ outputs:
       - clang {{ version }}
       - llvm-tools {{ version }}
       - cctools_{{ target_platform }}        # [osx]
+      - cctools_{{ target_platform }} =949.0.1=*_25       # [osx and x86_64]
       - cctools_{{ cross_target_platform }}
       - ld64_{{ cross_target_platform }}
       - ld64_{{ target_platform }}           # [osx]
+      - ld64_{{ target_platform }} =530=*_25 # [osx and x86_64]
       # this brings in an extra symlink of ld -> x86_64-apple-darwin13.4.0-ld
       # adding these generated an error w/ libtool: https://github.com/conda-forge/libtool-feedstock/issues/24
       # - ld64     # [cross_target_platform == target_platform]
@@ -57,6 +60,7 @@ outputs:
     requirements:
       build:
         - cctools_{{ target_platform }}   # [osx]
+        - cctools_{{ target_platform }} =949.0.1=*_25       # [osx and x86_64]
       host:
         - clangxx {{ version }}
         - libcxx {{ version }}            # [osx]
@@ -91,11 +95,14 @@ outputs:
     requirements:
       build:
         - cctools_{{ target_platform }}  # [osx]
+        - cctools_{{ target_platform }} =949.0.1=*_25       # [osx and x86_64]
       host:
         - clangxx {{ version }}
         - libcxx {{ version }}           # [cross_target_platform in ("osx-64", "osx-arm64")]
         - cctools_{{ cross_target_platform }}
+        - cctools_{{ cross_target_platform }} =949.0.1=*_25       # [osx and x86_64]
         - ld64_{{ cross_target_platform }}
+        - ld64_{{ cross_target_platform }} =530=*_25 # [osx and x86_64]
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
         - {{ pin_subpackage('clangxx_' ~ cross_target_platform, exact=True) }}
         # hack to force the solver to work
