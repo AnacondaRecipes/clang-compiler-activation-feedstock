@@ -3,6 +3,6 @@ build_parameters:
   - "--suppress-variables"
 
 channels:
-  - rafaelmartins-qt
+  - danielpetry
 
 upload_without_merge: true
