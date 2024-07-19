@@ -129,18 +129,12 @@ about:
   license: BSD-3-Clause
   license_family: BSD
   license_file: LICENSE.txt
-  license_url: https://github.com/AnacondaRecipes/clang-compiler-activation-feedstock/blob/master/LICENSE.txt
   summary: clang compilers for conda-build 3
   doc_url: https://github.com/AnacondaRecipes/clang-compiler-activation-feedstock
   dev_url: https://github.com/AnacondaRecipes/clang-compiler-activation-feedstock
 
 extra:
-  recipe-maintainers:
-    - isuruf
-    - mingwandroid
-    - katietz
-    - h-vetinari
   skip-lints:
     - missing_description
-    - missing_doc_source_url
     - missing_tests
+    - host_section_needs_exact_pinnings
