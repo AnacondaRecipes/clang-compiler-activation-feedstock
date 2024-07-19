@@ -2,6 +2,7 @@
 build_parameters:
   - "--suppress-variables"
 
-staging_channel_upload_target: clang_revert
+channels: 
+  - danielpetry
 
 upload_without_merge: true
