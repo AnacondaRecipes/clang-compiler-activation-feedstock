@@ -2,7 +2,8 @@
 
 set -e -x
 
-CHOST=${macos_machine}
+# CHOST is set directly in conda_build_config.yaml, for all platforms
+#CHOST=${macos_machine}
 echo CHOST is ${CHOST}
 
 mkdir -p "${PREFIX}"/etc/conda/{de,}activate.d/

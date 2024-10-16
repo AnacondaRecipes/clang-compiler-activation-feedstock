@@ -48,7 +48,7 @@ outputs:
       # Therefore `compiler-rt_osx-64` and `compiler-rt_osx-arm64` are basically the same
       # and clobber each other. Don't bring both here.
       - compiler-rt_{{ cross_target_platform }} {{ version }}     # [linux]
-      #- gcc_impl_{{ target_platform }}       # [linux]
+      - gcc_impl_{{ target_platform }}       # [linux]
       - sysroot_{{ cross_target_platform }}  # [linux]
     test:
       requires:
@@ -75,7 +75,7 @@ outputs:
         # This is not needed in Linux for cross-compiling in a conda-build env, but is needed outside
         - libcxx >={{ version }}
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
-        #- gxx_impl_{{ target_platform }}  # [linux]
+        - gxx_impl_{{ target_platform }}  # [linux]
         - sysroot_{{ target_platform }}   # [linux]
     # Since transitive run_exports are not currently possible
     # (here I would like the run dependency on clangxx to pull in the run_exports from it).

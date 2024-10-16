@@ -124,6 +124,9 @@ if [[ "@cross_target_platform@" == osx* ]]; then
   if [ "${CONDA_BUILD_SYSROOT_TEMP}" = "0" ]; then
     CONDA_BUILD_SYSROOT_TEMP=$(xcrun --show-sdk-path)
   fi
+else
+  # just set this, and the resulting SDKROOT environment variable, to an empty string for linux
+  CONDA_BUILD_SYSROOT_TEMP=""
 fi
 
 if [ "${CONDA_BUILD:-0}" = "1" ]; then
@@ -156,9 +159,7 @@ _tc_activation \
   "_CONDA_PYTHON_SYSCONFIGDATA_NAME,${_CONDA_PYTHON_SYSCONFIGDATA_NAME:-@_PYTHON_SYSCONFIGDATA_NAME@}" \
   "CMAKE_PREFIX_PATH,${CMAKE_PREFIX_PATH:-${CMAKE_PREFIX_PATH_USED}}" \
   "CONDA_BUILD_CROSS_COMPILATION,@CONDA_BUILD_CROSS_COMPILATION@" \
-  "$(if [[ "@cross_target_platform@" == osx* ]]; then
-    echo "SDKROOT,${CONDA_BUILD_SYSROOT_TEMP}"
-  fi)" \
+  "SDKROOT,${CONDA_BUILD_SYSROOT_TEMP}" \
   "CMAKE_ARGS,${_CMAKE_ARGS:-}" \
   "MESON_ARGS,${_MESON_ARGS:-}" \
   "ac_cv_func_malloc_0_nonnull,yes" \
