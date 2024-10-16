@@ -88,14 +88,22 @@ if [ "${CONDA_BUILD:-0}" = "1" ]; then
   LDFLAGS_USED="@LDFLAGS@ -Wl,-rpath,${PREFIX}/lib -L${PREFIX}/lib"
   LDFLAGS_LD_USED="@LDFLAGS_LD@ -rpath ${PREFIX}/lib -L${PREFIX}/lib"
   CPPFLAGS_USED="@CPPFLAGS@ -isystem ${PREFIX}/include"
-  CMAKE_PREFIX_PATH_USED="${CMAKE_PREFIX_PATH}:${PREFIX}"
+  if [[ "@cross_target_platform@" == osx* ]]; then
+    CMAKE_PREFIX_PATH_USED="${CMAKE_PREFIX_PATH}:${PREFIX}"
+  else
+    CMAKE_PREFIX_PATH_USED="${CMAKE_PREFIX_PATH}:${PREFIX}:${CONDA_PREFIX}/@CHOST@/sysroot/usr"
+  fi
 else
   CFLAGS_USED="@CFLAGS@ -isystem ${CONDA_PREFIX}/include"
   DEBUG_CFLAGS_USED="@CFLAGS@ @DEBUG_CFLAGS@ -isystem ${CONDA_PREFIX}/include"
   LDFLAGS_USED="@LDFLAGS@ -Wl,-rpath,${CONDA_PREFIX}/lib -L${CONDA_PREFIX}/lib"
   LDFLAGS_LD_USED="@LDFLAGS_LD@ -rpath ${CONDA_PREFIX}/lib -L${CONDA_PREFIX}/lib"
   CPPFLAGS_USED="@CPPFLAGS@ -isystem ${CONDA_PREFIX}/include"
-  CMAKE_PREFIX_PATH_USED="${CMAKE_PREFIX_PATH}:${CONDA_PREFIX}"
+  if [[ "@cross_target_platform@" == osx* ]]; then
+    CMAKE_PREFIX_PATH_USED="${CMAKE_PREFIX_PATH}:${PREFIX}"
+  else
+    CMAKE_PREFIX_PATH_USED="${CMAKE_PREFIX_PATH}:${PREFIX}:${CONDA_PREFIX}/@CHOST@/sysroot/usr"
+  fi
 fi
 
 if [ "${MACOSX_DEPLOYMENT_TARGET:-0}" != "0" ]; then
@@ -119,12 +127,14 @@ if [ "${CONDA_BUILD_SYSROOT:-0}" != "0" ] && [ "${CONDA_BUILD_STATE:-0}" = "TEST
   unset CONDA_BUILD_SYSROOT
 fi
 
-CONDA_BUILD_SYSROOT_TEMP=${CONDA_BUILD_SYSROOT:-${SDKROOT:-0}}
-if [ "${CONDA_BUILD_SYSROOT_TEMP}" = "0" ]; then
-  if [ "${SDKROOT:-0}" = "0" ]; then
-    CONDA_BUILD_SYSROOT_TEMP=$(xcrun --show-sdk-path)
-  else
-    CONDA_BUILD_SYSROOT_TEMP=${SDKROOT}
+if [[ "@cross_target_platform@" == osx* ]]; then
+  CONDA_BUILD_SYSROOT_TEMP=${CONDA_BUILD_SYSROOT:-${SDKROOT:-0}}
+  if [ "${CONDA_BUILD_SYSROOT_TEMP}" = "0" ]; then
+    if [ "${SDKROOT:-0}" = "0" ]; then
+      CONDA_BUILD_SYSROOT_TEMP=$(xcrun --show-sdk-path)
+    else
+      CONDA_BUILD_SYSROOT_TEMP=${SDKROOT}
+    fi
   fi
 fi
 
@@ -133,18 +143,27 @@ _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_RANLIB=${CONDA_PREFIX}/bin/@CHOST@-ranlib -D
 _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_LINKER=${CONDA_PREFIX}/bin/@CHOST@-ld -DCMAKE_STRIP=${CONDA_PREFIX}/bin/@CHOST@-strip"
 _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_INSTALL_NAME_TOOL=${CONDA_PREFIX}/bin/@CHOST@-install_name_tool"
 _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_LIBTOOL=${CONDA_PREFIX}/bin/@CHOST@-libtool"
-_CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_OSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET}"
-_CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_SYSROOT=${CONDA_BUILD_SYSROOT_TEMP}"
+_CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_BUILD_TYPE=Release"
+if [[ "@cross_target_platform@" == osx* ]]; then
+  _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_OSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET}"
+  _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_OSX_SYSROOT=${CONDA_BUILD_SYSROOT_TEMP}"
+fi
 
 _MESON_ARGS="--buildtype release"
 
 if [ "${CONDA_BUILD:-0}" = "1" ]; then
+  if [[ "@cross_target_platform@" == linux* ]]; then
+    _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY"
+    _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_FIND_ROOT_PATH=$PREFIX;${BUILD_PREFIX}/@CHOST@/sysroot"
+  fi
   _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_INSTALL_PREFIX=${PREFIX} -DCMAKE_INSTALL_LIBDIR=lib"
   _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_PROGRAM_PATH=${BUILD_PREFIX}/bin;${PREFIX}/bin"
   _MESON_ARGS="${_MESON_ARGS} --prefix="$PREFIX" -Dlibdir=lib"
 fi
 
 if [ "@CONDA_BUILD_CROSS_COMPILATION@" = "1" ]; then
+  echo "This recipe does not support cross-compilation. Exiting"
+  exit 1
   _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_SYSTEM_NAME=Darwin -DCMAKE_SYSTEM_PROCESSOR=@UNAME_MACHINE@ -DCMAKE_SYSTEM_VERSION=@UNAME_KERNEL_RELEASE@"
   _MESON_ARGS="${_MESON_ARGS} --cross-file $BUILD_PREFIX/meson_cross_file.txt"
   echo "[host_machine]" > $BUILD_PREFIX/meson_cross_file.txt
@@ -153,6 +172,7 @@ if [ "@CONDA_BUILD_CROSS_COMPILATION@" = "1" ]; then
   echo "cpu_family = '@MESON_CPU_FAMILY@'" >> $BUILD_PREFIX/meson_cross_file.txt
   echo "endian = 'little'" >> $BUILD_PREFIX/meson_cross_file.txt
 fi
+
 
 _tc_activation \
   activate @CHOST@- "HOST,@CHOST@" \
@@ -173,7 +193,9 @@ _tc_activation \
   "_CONDA_PYTHON_SYSCONFIGDATA_NAME,${_CONDA_PYTHON_SYSCONFIGDATA_NAME:-@_PYTHON_SYSCONFIGDATA_NAME@}" \
   "CMAKE_PREFIX_PATH,${CMAKE_PREFIX_PATH:-${CMAKE_PREFIX_PATH_USED}}" \
   "CONDA_BUILD_CROSS_COMPILATION,@CONDA_BUILD_CROSS_COMPILATION@" \
-  "SDKROOT,${CONDA_BUILD_SYSROOT_TEMP}" \
+  "$(if [[ "@cross_target_platform@" == osx* ]]; then
+    echo "SDKROOT,${CONDA_BUILD_SYSROOT_TEMP}"
+  fi)" \
   "CMAKE_ARGS,${_CMAKE_ARGS}" \
   "MESON_ARGS,${_MESON_ARGS}" \
   "ac_cv_func_malloc_0_nonnull,yes" \
@@ -186,7 +208,11 @@ if [ "${CONDA_BUILD:-0}" = "1" ]; then
   # in conda build we set CONDA_BUILD_SYSROOT too
   _tc_activation \
     activate @CHOST@- \
-    "CONDA_BUILD_SYSROOT,${CONDA_BUILD_SYSROOT_TEMP}"
+    "$(if [[ "@cross_target_platform@" == osx* ]]; then
+      echo "CONDA_BUILD_SYSROOT,${CONDA_BUILD_SYSROOT_TEMP}"
+    else
+      echo "CONDA_BUILD_SYSROOT,${CONDA_PREFIX}/@CHOST@/sysroot"
+    fi)"
 fi
 
 unset CONDA_BUILD_SYSROOT_TEMP

@@ -2,7 +2,8 @@
 
 set -e -x
 
-CHOST=${macos_machine}
+# CHOST is set directly in conda_build_config.yaml, for all platforms
+#CHOST=${macos_machine}
 
 mkdir -p "${PREFIX}"/etc/conda/{de,}activate.d/
 cp "${SRC_DIR}"/activate-clang.sh "${PREFIX}"/etc/conda/activate.d/activate_"${PKG_NAME}".sh
