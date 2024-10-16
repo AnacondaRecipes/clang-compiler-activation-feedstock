@@ -16,7 +16,7 @@ package:
 #   sha256: 326335a830f2e32d06d0a36393b5455d17dc73e0bd1211065227ee014f92cbf8  # [version == "13.0.1"]
 
 build:
-  skip: true  # [win or linux]
+  skip: true  # [win]
   number: {{ build_number }}
 
 requirements:
