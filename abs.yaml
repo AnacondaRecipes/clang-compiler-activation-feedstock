@@ -1,0 +1,4 @@
+# clang_bootstrap will fail its overlinking check. That's ok
+build_parameters:
+  - "--suppress-variables"
+  - "--skip-existing"
