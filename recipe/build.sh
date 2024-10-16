@@ -1,6 +1,7 @@
 #!/bin/bash
 
-CHOST=${macos_machine}
+# CHOST is set directly in conda_build_config.yaml, for all platforms
+#CHOST=${macos_machine}
 
 FINAL_CPPFLAGS="-D_FORTIFY_SOURCE=2"
 FINAL_CFLAGS="-ftree-vectorize -fPIC -fPIE -fstack-protector-strong -O2 -pipe"
@@ -25,13 +26,9 @@ else
   CONDA_BUILD_CROSS_COMPILATION="1"
 fi
 
-if [[ "$target_platform" == linux* ]]; then
-  CC_FOR_BUILD=${CBUILD}-gcc
-  CXX_FOR_BUILD=${CBUILD}-g++
-else
-  CC_FOR_BUILD=${CBUILD}-clang
-  CXX_FOR_BUILD=${CBUILD}-clang++
-fi
+CC_FOR_BUILD=${CBUILD}-clang
+CXX_FOR_BUILD=${CBUILD}-clang++
+
 
 find "${RECIPE_DIR}" -name "*activate*.sh" -exec cp {} . \;
 

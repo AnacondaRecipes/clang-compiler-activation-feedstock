@@ -90,14 +90,22 @@ if [ "${CONDA_BUILD:-0}" = "1" ]; then
   LDFLAGS_USED="@LDFLAGS@ -Wl,-rpath,${PREFIX}/lib -L${PREFIX}/lib"
   LDFLAGS_LD_USED="@LDFLAGS_LD@ -rpath ${PREFIX}/lib -L${PREFIX}/lib"
   CPPFLAGS_USED="@CPPFLAGS@ -isystem ${PREFIX}/include"
-  CMAKE_PREFIX_PATH_USED="${CMAKE_PREFIX_PATH}:${PREFIX}"
+  if [[ "@cross_target_platform@" == osx* ]]; then
+    CMAKE_PREFIX_PATH_USED="${CMAKE_PREFIX_PATH}:${PREFIX}"
+  else
+    CMAKE_PREFIX_PATH_USED="${CMAKE_PREFIX_PATH}:${PREFIX}:${CONDA_PREFIX}/@CHOST@/sysroot/usr"
+  fi
 else
   CFLAGS_USED="@CFLAGS@ -isystem ${CONDA_PREFIX}/include"
   DEBUG_CFLAGS_USED="@CFLAGS@ @DEBUG_CFLAGS@ -isystem ${CONDA_PREFIX}/include"
   LDFLAGS_USED="@LDFLAGS@ -Wl,-rpath,${CONDA_PREFIX}/lib -L${CONDA_PREFIX}/lib"
   LDFLAGS_LD_USED="@LDFLAGS_LD@ -rpath ${CONDA_PREFIX}/lib -L${CONDA_PREFIX}/lib"
   CPPFLAGS_USED="@CPPFLAGS@ -isystem ${CONDA_PREFIX}/include"
-  CMAKE_PREFIX_PATH_USED="${CMAKE_PREFIX_PATH}:${CONDA_PREFIX}"
+  if [[ "@cross_target_platform@" == osx* ]]; then
+    CMAKE_PREFIX_PATH_USED="${CMAKE_PREFIX_PATH}:${PREFIX}"
+  else
+    CMAKE_PREFIX_PATH_USED="${CMAKE_PREFIX_PATH}:${PREFIX}:${CONDA_PREFIX}/@CHOST@/sysroot/usr"
+  fi
 fi
 
 if [ "${MACOSX_DEPLOYMENT_TARGET:-0}" != "0" ]; then
@@ -111,16 +119,25 @@ if [ "${CONDA_BUILD:-0}" = "1" ]; then
   env > /tmp/old-env-$$.txt
 fi
 
-CONDA_BUILD_SYSROOT_TEMP=${CONDA_BUILD_SYSROOT:-${SDKROOT:-0}}
-if [ "${CONDA_BUILD_SYSROOT_TEMP}" = "0" ]; then
-   CONDA_BUILD_SYSROOT_TEMP=$(xcrun --show-sdk-path)
+if [[ "@cross_target_platform@" == osx* ]]; then
+  CONDA_BUILD_SYSROOT_TEMP=${CONDA_BUILD_SYSROOT:-${SDKROOT:-0}}
+  if [ "${CONDA_BUILD_SYSROOT_TEMP}" = "0" ]; then
+    CONDA_BUILD_SYSROOT_TEMP=$(xcrun --show-sdk-path)
+  fi
+else
+  # just set this, and the resulting SDKROOT environment variable, to an empty string for linux
+  CONDA_BUILD_SYSROOT_TEMP=""
 fi
 
 if [ "${CONDA_BUILD:-0}" = "1" ]; then
   # in conda build we need to unset CONDA_BUILD_SYSROOT
   _tc_activation \
     deactivate @CHOST@- \
-    "CONDA_BUILD_SYSROOT,${CONDA_BUILD_SYSROOT_TEMP}"
+    "$(if [[ "@cross_target_platform@" == osx* ]]; then
+      echo "CONDA_BUILD_SYSROOT,${CONDA_BUILD_SYSROOT_TEMP}"
+    else
+      echo "CONDA_BUILD_SYSROOT,${CONDA_PREFIX}/@CHOST@/sysroot"
+    fi)"
 fi
 
 _tc_activation \

@@ -1,4 +1,4 @@
-# the conda-build parameters to use for disabling --skip-existing
+# clang_bootstrap will fail its overlinking check. That's ok
 build_parameters:
   - "--suppress-variables"
-
+  - "--skip-existing"
