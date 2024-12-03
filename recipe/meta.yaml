@@ -2,8 +2,11 @@
 {% set version = "14.0.6" %}
 {% endif %}
 {% set major_ver = version.split(".")[0] %}
+# in the past we've had to uncouple the compiler version from the version
+# of the C++ stdlib; keep the variable in case this happens again
+{% set libcxx_major = major_ver %}
 
-{% set build_number = 0 %}
+{% set build_number = 5 %}
 
 package:
   name: clang-compiler-activation
@@ -16,7 +19,7 @@ package:
 #   sha256: 326335a830f2e32d06d0a36393b5455d17dc73e0bd1211065227ee014f92cbf8  # [version == "13.0.1"]
 
 build:
-  skip: true  # [win or linux]
+  # skip: true  # [win or linux]
   number: {{ build_number }}
 
 requirements:
@@ -27,8 +30,8 @@ requirements:
     - clang {{ version }}            # [osx]
 
 outputs:
-  - name: clang_{{ cross_target_platform }}
-    script: install-clang.sh
+  - name: clang_impl_{{ cross_target_platform }}
+    script: install-clang_impl.sh
     requirements:
       - clang {{ version }}
       - llvm-tools {{ version }}
@@ -50,24 +53,38 @@ outputs:
     test:
       commands:
         - {{ CBUILD }}-clang --version
+        - {{ CBUILD }}-clang-cpp --version
         - {{ macos_machine }}-clang --version
+        - {{ macos_machine }}-clang-cpp --version
 
-  - name: clangxx_{{ cross_target_platform }}
-    script: install-clangxx.sh
+  - name: clang_{{ cross_target_platform }}
+    script: install-clang.sh
+    requirements:
+      run:
+        - {{ pin_subpackage("clang_impl_" ~ cross_target_platform, exact=True) }}
+    test:
+      commands:
+        - ${CC} --version
+        - ${CPP} --version
+        - ${CC_FOR_BUILD} --version
+        - ${CPP_FOR_BUILD} --version
+
+  - name: clangxx_impl_{{ cross_target_platform }}
+    script: install-clangxx_impl.sh
     requirements:
       build:
         - cctools_{{ target_platform }}   # [osx]
       host:
         - clangxx {{ version }}
         - libcxx {{ version }}            # [osx]
-        - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
+        - {{ pin_subpackage('clang_impl_' ~ cross_target_platform, exact=True) }}
         - gxx_impl_{{ target_platform }}  # [linux]
         # hack to force the solver to work
         - libllvm{{ major_ver }} {{ version }}
       run:
         - clangxx {{ version }}
         # This is not needed in Linux for cross-compiling in a conda-build env, but is needed outside
-        - libcxx >={{ version }}
+        - libcxx >={{ libcxx_major }}
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
         - gxx_impl_{{ target_platform }}  # [linux]
     # Since transitive run_exports are not currently possible
@@ -86,6 +103,23 @@ outputs:
         - {{ CBUILD }}-clang++ --version
         - {{ macos_machine }}-clang++ --version
 
+  - name: clangxx_{{ cross_target_platform }}
+    script: install-clangxx.sh
+    build:
+      # Since transitive run_exports are not currently possible
+      # (here I would like the run dependency on clangxx to pull in the run_exports from it).
+      run_exports:
+        strong:
+          - libcxx >={{ libcxx_major }}
+    requirements:
+      run:
+        - {{ pin_subpackage("clangxx_impl_" ~ cross_target_platform, exact=True) }}
+        - {{ pin_subpackage("clang_" ~ cross_target_platform, exact=True) }}
+    test:
+      commands:
+        - ${CXX} --version
+        - ${CXX_FOR_BUILD} --version
+
   - name: clang_bootstrap_{{ cross_target_platform }}
     script: install-clang-bootstrap.sh
     requirements:
@@ -93,7 +127,7 @@ outputs:
         - cctools_{{ target_platform }}  # [osx]
       host:
         - clangxx {{ version }}
-        - libcxx {{ version }}           # [cross_target_platform in ("osx-64", "osx-arm64")]
+        - libcxx {{ libcxx_major }}      # [cross_target_platform in ("osx-64", "osx-arm64")]
         - cctools_{{ cross_target_platform }}
         - ld64_{{ cross_target_platform }}
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
@@ -116,6 +150,7 @@ outputs:
     test:
       commands:
         - {{ macos_machine }}-clang --version
+        - {{ macos_machine }}-clang-cpp --version
         - {{ macos_machine }}-clang++ --version
     about:
       home: https://llvm.org
@@ -125,22 +160,14 @@ outputs:
       summary: clang compiler components in one package for bootstrapping clang
 
 about:
-  home: https://github.com/AnacondaRecipes/clang-compiler-activation-feedstock
+  home: http://github.com/AnacondaRecipes/clang-compiler-activation-feedstock
   license: BSD-3-Clause
   license_family: BSD
   license_file: LICENSE.txt
-  license_url: https://github.com/AnacondaRecipes/clang-compiler-activation-feedstock/blob/master/LICENSE.txt
   summary: clang compilers for conda-build 3
-  doc_url: https://github.com/AnacondaRecipes/clang-compiler-activation-feedstock
-  dev_url: https://github.com/AnacondaRecipes/clang-compiler-activation-feedstock
 
 extra:
   recipe-maintainers:
     - isuruf
-    - mingwandroid
     - katietz
     - h-vetinari
-  skip-lints:
-    - missing_description
-    - missing_doc_source_url
-    - missing_tests
