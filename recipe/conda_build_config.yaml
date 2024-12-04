@@ -32,7 +32,8 @@ FINAL_PYTHON_SYSCONFIGDATA_NAME:
   - _sysconfigdata_x86_64_apple_darwin13_4_0  # [x86_64]
   - _sysconfigdata_arm64_apple_darwin20_0_0   # [not x86_64]
 zip_keys:
-  - - cross_target_platform
+  -
+    - cross_target_platform
     - macos_machine
     - meson_cpu_family
     - uname_machine
