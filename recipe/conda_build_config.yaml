@@ -8,26 +8,18 @@ CBUILD:
 MACOSX_DEPLOYMENT_TARGET:  # [linux]
   - 10.9                   # [linux]
 
-version:
-  - 15.0.7
-  - 16.0.6
-  - 17.0.6
+c_compiler_version:        # [osx]
+  - 17                     # [osx]
+cxx_compiler_version:      # [osx]
+  - 17                     # [osx]
 
 # everything below is zipped
 cross_target_platform:
-<<<<<<< HEAD
   - osx-64     # [x86_64]
   - osx-arm64  # [not x86_64]
 macos_machine:
-  - x86_64-apple-darwin13.4.0  # [x86_64]
-  - arm64-apple-darwin20.0.0   # [not x86_64]
-CBUILD:
-  - x86_64-conda-linux-gnu       # [linux64]
-  - powerpc64le-conda-linux-gnu  # [linux and ppc64le]
-  - aarch64-conda-linux-gnu      # [linux and aarch64]
-  - s390x-conda-linux-gnu        # [linux and s390x]
-  - x86_64-apple-darwin13.4.0    # [osx and x86_64]
-  - arm64-apple-darwin20.0.0     # [osx and arm64]
+  - x86_64-apple-darwin13.4.0  # [osx and x86_64]
+  - arm64-apple-darwin20.0.0   # [osx and arm64]
 uname_machine:
   - x86_64  # [x86_64]
   - arm64   # [not x86_64]
@@ -40,42 +32,12 @@ uname_kernel_release:
 FINAL_PYTHON_SYSCONFIGDATA_NAME:
   - _sysconfigdata_x86_64_apple_darwin13_4_0  # [x86_64]
   - _sysconfigdata_arm64_apple_darwin20_0_0   # [not x86_64]
-zip_keys:
-  - - cross_target_platform
-=======
-  - osx-64
-  - osx-arm64
-macos_machine:
-  - x86_64-apple-darwin13.4.0
-  - arm64-apple-darwin20.0.0
-uname_machine:
-  - x86_64
-  - arm64
-meson_cpu_family:
-  - x86_64
-  - aarch64
-uname_kernel_release:
-  - 13.4.0
-  - 20.0.0
-FINAL_PYTHON_SYSCONFIGDATA_NAME:
-  - _sysconfigdata_x86_64_apple_darwin13_4_0
-  - _sysconfigdata_arm64_apple_darwin20_0_0
 
 zip_keys:
   -
     - cross_target_platform
->>>>>>> 3e3fd1a28877a845fe0fd6bb31f058da8bf7e3a4
     - macos_machine
     - meson_cpu_family
     - uname_machine
     - uname_kernel_release
     - FINAL_PYTHON_SYSCONFIGDATA_NAME
-<<<<<<< HEAD
-version:
-  - 17.0.6
-c_compiler_version:        # [osx]
-  - 17                     # [osx]
-cxx_compiler_version:      # [osx]
-  - 17                     # [osx]
-=======
->>>>>>> 3e3fd1a28877a845fe0fd6bb31f058da8bf7e3a4
