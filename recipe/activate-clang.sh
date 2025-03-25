@@ -133,12 +133,22 @@ _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_RANLIB=${CONDA_PREFIX}/bin/@CHOST@-ranlib -D
 _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_LINKER=${CONDA_PREFIX}/bin/@CHOST@-ld -DCMAKE_STRIP=${CONDA_PREFIX}/bin/@CHOST@-strip"
 _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_INSTALL_NAME_TOOL=${CONDA_PREFIX}/bin/@CHOST@-install_name_tool"
 _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_LIBTOOL=${CONDA_PREFIX}/bin/@CHOST@-libtool"
+<<<<<<< HEAD
 _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_OSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET}"
+=======
+if [ "${MACOSX_DEPLOYMENT_TARGET:-0}" != "0" ]; then
+  _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_OSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET}"
+fi
+>>>>>>> 3e3fd1a28877a845fe0fd6bb31f058da8bf7e3a4
 _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_SYSROOT=${CONDA_BUILD_SYSROOT_TEMP}"
 
 _MESON_ARGS="--buildtype release"
 
 if [ "${CONDA_BUILD:-0}" = "1" ]; then
+<<<<<<< HEAD
+=======
+  _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_FIND_FRAMEWORK=LAST -DCMAKE_FIND_APPBUNDLE=LAST"
+>>>>>>> 3e3fd1a28877a845fe0fd6bb31f058da8bf7e3a4
   _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_INSTALL_PREFIX=${PREFIX} -DCMAKE_INSTALL_LIBDIR=lib"
   _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_PROGRAM_PATH=${BUILD_PREFIX}/bin;${PREFIX}/bin"
   _MESON_ARGS="${_MESON_ARGS} --prefix="$PREFIX" -Dlibdir=lib"
@@ -146,12 +156,26 @@ fi
 
 if [ "@CONDA_BUILD_CROSS_COMPILATION@" = "1" ]; then
   _CMAKE_ARGS="${_CMAKE_ARGS} -DCMAKE_SYSTEM_NAME=Darwin -DCMAKE_SYSTEM_PROCESSOR=@UNAME_MACHINE@ -DCMAKE_SYSTEM_VERSION=@UNAME_KERNEL_RELEASE@"
+<<<<<<< HEAD
   _MESON_ARGS="${_MESON_ARGS} --cross-file $BUILD_PREFIX/meson_cross_file.txt"
   echo "[host_machine]" > $BUILD_PREFIX/meson_cross_file.txt
   echo "system = 'darwin'" >> $BUILD_PREFIX/meson_cross_file.txt
   echo "cpu = '@UNAME_MACHINE@'" >> $BUILD_PREFIX/meson_cross_file.txt
   echo "cpu_family = '@MESON_CPU_FAMILY@'" >> $BUILD_PREFIX/meson_cross_file.txt
   echo "endian = 'little'" >> $BUILD_PREFIX/meson_cross_file.txt
+=======
+  _MESON_ARGS="${_MESON_ARGS} --cross-file ${CONDA_PREFIX}/meson_cross_file.txt"
+  echo "[host_machine]" > ${CONDA_PREFIX}/meson_cross_file.txt
+  echo "system = 'darwin'" >> ${CONDA_PREFIX}/meson_cross_file.txt
+  echo "cpu = '@UNAME_MACHINE@'" >> ${CONDA_PREFIX}/meson_cross_file.txt
+  echo "cpu_family = '@MESON_CPU_FAMILY@'" >> ${CONDA_PREFIX}/meson_cross_file.txt
+  echo "endian = 'little'" >> ${CONDA_PREFIX}/meson_cross_file.txt
+  # specify path to correct binaries from build (not host) environment,
+  # which meson will not auto-discover (out of caution) if not told explicitly.
+  echo "[binaries]" >> ${CONDA_PREFIX}/meson_cross_file.txt
+  echo "cmake = '${CONDA_PREFIX}/bin/cmake'" >> ${CONDA_PREFIX}/meson_cross_file.txt
+  echo "pkgconfig = '${CONDA_PREFIX}/bin/pkg-config'" >> ${CONDA_PREFIX}/meson_cross_file.txt
+>>>>>>> 3e3fd1a28877a845fe0fd6bb31f058da8bf7e3a4
 fi
 
 _tc_activation \

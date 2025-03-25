@@ -3,21 +3,36 @@
 CHOST=${macos_machine}
 
 FINAL_CPPFLAGS="-D_FORTIFY_SOURCE=2"
+<<<<<<< HEAD
 FINAL_CFLAGS="-ftree-vectorize -fPIC -fPIE -fstack-protector-strong -O2 -pipe"
 FINAL_CXXFLAGS="-ftree-vectorize -fPIC -fPIE -fstack-protector-strong -O2 -pipe -stdlib=libc++ -fvisibility-inlines-hidden -fmessage-length=0"
 if [[ "${version}" == "11.1.0" ]]; then
   FINAL_CXXFLAGS="${FINAL_CXXFLAGS} -std=c++14"
 fi
+=======
+FINAL_CFLAGS="-ftree-vectorize -fPIC -fstack-protector-strong -O2 -pipe"
+FINAL_CXXFLAGS="-ftree-vectorize -fPIC -fstack-protector-strong -O2 -pipe -stdlib=libc++ -fvisibility-inlines-hidden -fmessage-length=0"
+>>>>>>> 3e3fd1a28877a845fe0fd6bb31f058da8bf7e3a4
 if [[ "${uname_machine}" == "x86_64" ]]; then
   FINAL_CFLAGS="-march=core2 -mtune=haswell -mssse3 $FINAL_CFLAGS"
   FINAL_CXXFLAGS="-march=core2 -mtune=haswell -mssse3 $FINAL_CXXFLAGS"
 fi
 # These are the LDFLAGS for when the linker is being driven by a compiler, i.e. with -Wl,
-FINAL_LDFLAGS="-Wl,-pie -Wl,-headerpad_max_install_names -Wl,-dead_strip_dylibs"
+FINAL_LDFLAGS="-Wl,-headerpad_max_install_names -Wl,-dead_strip_dylibs"
 # These are the LDFLAGS for when the linker is being called directly, i.e. without -Wl,
-FINAL_LDFLAGS_LD="-pie -headerpad_max_install_names -dead_strip_dylibs"
+FINAL_LDFLAGS_LD="-headerpad_max_install_names -dead_strip_dylibs"
 FINAL_DEBUG_CFLAGS="-Og -g -Wall -Wextra"
 FINAL_DEBUG_CXXFLAGS="-Og -g -Wall -Wextra"
+<<<<<<< HEAD
+=======
+
+if [[ "${version}" == "15.0.7" ]]; then
+  FINAL_CFLAGS="$FINAL_CFLAGS -fPIE"
+  FINAL_CXXFLAGS="$FINAL_CXXFLAGS -fPIE"
+  FINAL_LDFLAGS="$FINAL_LDFLAGS -Wl,-pie"
+  FINAL_LDFLAGS_LD="$FINAL_LDFLAGS_LD -pie"
+fi
+>>>>>>> 3e3fd1a28877a845fe0fd6bb31f058da8bf7e3a4
 
 if [[ "$target_platform" == "$cross_target_platform" ]]; then
   CONDA_BUILD_CROSS_COMPILATION=""

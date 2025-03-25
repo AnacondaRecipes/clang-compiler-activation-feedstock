@@ -2,8 +2,17 @@
 {% set version = "17.0.6" %}
 {% endif %}
 {% set major_ver = version.split(".")[0] %}
+<<<<<<< HEAD
 
 {% set build_number = 0 %}
+=======
+# cannot yet build libcxx 17 due to having no
+# infrastructure to enforce `__osx >=10.13` properly,
+# so allow the last major version of libcxx
+{% set last_major = major_ver | int - 1 %}
+
+{% set build_number = 8 %}
+>>>>>>> 3e3fd1a28877a845fe0fd6bb31f058da8bf7e3a4
 
 package:
   name: clang-compiler-activation
@@ -16,18 +25,26 @@ package:
 #   sha256: 326335a830f2e32d06d0a36393b5455d17dc73e0bd1211065227ee014f92cbf8  # [version == "13.0.1"]
 
 build:
+<<<<<<< HEAD
   skip: true  # [win or linux]
+=======
+  skip: true  # [win]
+>>>>>>> 3e3fd1a28877a845fe0fd6bb31f058da8bf7e3a4
   number: {{ build_number }}
 
 requirements:
   build:
     - cctools_{{ target_platform }}  # [osx]
+<<<<<<< HEAD
     - libcxx {{ version }}
+=======
+    - libcxx {{ last_major }}
+>>>>>>> 3e3fd1a28877a845fe0fd6bb31f058da8bf7e3a4
     - gcc_{{ target_platform }}      # [linux]
     - clang {{ version }}            # [osx]
 
 outputs:
-  - name: clang_{{ cross_target_platform }}
+  - name: clang_impl_{{ cross_target_platform }}
     script: install-clang.sh
     requirements:
       - clang {{ version }}
@@ -52,29 +69,44 @@ outputs:
         - {{ CBUILD }}-clang --version
         - {{ macos_machine }}-clang --version
 
-  - name: clangxx_{{ cross_target_platform }}
+  - name: clang_{{ cross_target_platform }}
+    script: install-clang-scripts.sh
+    requirements:
+      run:
+        - {{ pin_subpackage("clang_impl_" ~ cross_target_platform, exact=True) }}
+    test:
+      commands:
+        - {{ CBUILD }}-clang --version
+        - {{ macos_machine }}-clang --version
+
+  - name: clangxx_impl_{{ cross_target_platform }}
     script: install-clangxx.sh
     requirements:
       build:
         - cctools_{{ target_platform }}   # [osx]
       host:
         - clangxx {{ version }}
+<<<<<<< HEAD
         - libcxx {{ version }}            # [osx]
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
+=======
+        - libcxx {{ last_major }}         # [osx]
+        - {{ pin_subpackage('clang_impl_' ~ cross_target_platform, exact=True) }}
+>>>>>>> 3e3fd1a28877a845fe0fd6bb31f058da8bf7e3a4
         - gxx_impl_{{ target_platform }}  # [linux]
         # hack to force the solver to work
         - libllvm{{ major_ver }} {{ version }}
       run:
         - clangxx {{ version }}
         # This is not needed in Linux for cross-compiling in a conda-build env, but is needed outside
+<<<<<<< HEAD
         - libcxx >={{ version }}
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
         - gxx_impl_{{ target_platform }}  # [linux]
-    # Since transitive run_exports are not currently possible
-    # (here I would like the run dependency on clangxx to pull in the run_exports from it).
-    run_exports:
-      strong:
-        - libcxx >={{ version }}
+=======
+        - libcxx >={{ last_major }}
+        - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
+        - gxx_impl_{{ target_platform }}            # [linux]
     test:
       commands:
         - echo {{ MACOSX_DEPLOYMENT_TARGET }}  # [linux]
@@ -86,6 +118,37 @@ outputs:
         - {{ CBUILD }}-clang++ --version
         - {{ macos_machine }}-clang++ --version
 
+  - name: clangxx_{{ cross_target_platform }}
+    script: install-clangxx-scripts.sh
+    requirements:
+      run:
+        - {{ pin_subpackage("clangxx_impl_" ~ cross_target_platform, exact=True) }}
+        - {{ pin_subpackage("clang_" ~ cross_target_platform, exact=True) }}
+    test:
+      commands:
+        - {{ CBUILD }}-clang++ --version
+        - {{ macos_machine }}-clang++ --version
+>>>>>>> 3e3fd1a28877a845fe0fd6bb31f058da8bf7e3a4
+    # Since transitive run_exports are not currently possible
+    # (here I would like the run dependency on clangxx to pull in the run_exports from it).
+    run_exports:
+      strong:
+<<<<<<< HEAD
+        - libcxx >={{ version }}
+    test:
+      commands:
+        - echo {{ MACOSX_DEPLOYMENT_TARGET }}  # [linux]
+        - echo {{ uname_kernel_release }}
+        - echo {{ uname_machine }}
+        - echo {{ FINAL_PYTHON_SYSCONFIGDATA_NAME }}
+        - echo {{ CBUILD }}
+        - echo {{ meson_cpu_family }}
+        - {{ CBUILD }}-clang++ --version
+        - {{ macos_machine }}-clang++ --version
+=======
+        - libcxx >={{ last_major }}
+>>>>>>> 3e3fd1a28877a845fe0fd6bb31f058da8bf7e3a4
+
   - name: clang_bootstrap_{{ cross_target_platform }}
     script: install-clang-bootstrap.sh
     requirements:
@@ -93,7 +156,11 @@ outputs:
         - cctools_{{ target_platform }}  # [osx]
       host:
         - clangxx {{ version }}
+<<<<<<< HEAD
         - libcxx {{ version }}           # [cross_target_platform in ("osx-64", "osx-arm64")]
+=======
+        - libcxx {{ last_major }}        # [cross_target_platform in ("osx-64", "osx-arm64")]
+>>>>>>> 3e3fd1a28877a845fe0fd6bb31f058da8bf7e3a4
         - cctools_{{ cross_target_platform }}
         - ld64_{{ cross_target_platform }}
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
@@ -125,6 +192,7 @@ outputs:
       summary: clang compiler components in one package for bootstrapping clang
 
 about:
+<<<<<<< HEAD
   home: https://github.com/AnacondaRecipes/clang-compiler-activation-feedstock
   license: BSD-3-Clause
   license_family: BSD
@@ -133,6 +201,13 @@ about:
   summary: clang compilers for conda-build 3
   doc_url: https://github.com/AnacondaRecipes/clang-compiler-activation-feedstock
   dev_url: https://github.com/AnacondaRecipes/clang-compiler-activation-feedstock
+=======
+  home: http://github.com/conda-forge/clang-compiler-activation-feedstock
+  license: BSD-3-Clause
+  license_family: BSD
+  license_file: LICENSE.txt
+  summary: clang compilers for conda-build 3
+>>>>>>> 3e3fd1a28877a845fe0fd6bb31f058da8bf7e3a4
 
 extra:
   recipe-maintainers:
@@ -140,7 +215,10 @@ extra:
     - mingwandroid
     - katietz
     - h-vetinari
+<<<<<<< HEAD
   skip-lints:
     - missing_description
     - missing_doc_source_url
     - missing_tests
+=======
+>>>>>>> 3e3fd1a28877a845fe0fd6bb31f058da8bf7e3a4
