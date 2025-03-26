@@ -16,16 +16,15 @@ package:
 #   sha256: 326335a830f2e32d06d0a36393b5455d17dc73e0bd1211065227ee014f92cbf8  # [version == "13.0.1"]
 
 build:
-#  skip: true  # [win or linux]
+  skip: true  # [not osx]
   number: {{ build_number }}
 
 requirements:
   build:
-    # - cctools_{{ target_platform }}  # [osx]
+    - cctools_{{ target_platform }}  # [osx]
     - libcxx {{ version }}
-    # - gcc_{{ target_platform }}      # [linux]
-    # - clang {{ version }}            # [osx]
-    - clang {{ version }}
+    - gcc_{{ target_platform }}      # [linux]
+    - clang {{ version }}            # [osx]
 
 outputs:
   - name: clang_impl_{{ cross_target_platform }}
@@ -47,7 +46,7 @@ outputs:
       # Therefore `compiler-rt_osx-64` and `compiler-rt_osx-arm64` are basically the same
       # and clobber each other. Don't bring both here.
       - compiler-rt_{{ cross_target_platform }} {{ version }}     # [linux]
-      - gcc_impl_{{ target_platform }}       # [linux]
+      # - gcc_impl_{{ target_platform }}       # [linux]
     test:
       commands:
         - {{ CBUILD }}-clang --version
@@ -71,9 +70,8 @@ outputs:
       host:
         - clangxx {{ version }}
         - libcxx {{ version }}            # [osx]
-        # - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
         - {{ pin_subpackage('clang_impl_' ~ cross_target_platform, exact=True) }}
-        - gxx_impl_{{ target_platform }}  # [linux]
+        # - gxx_impl_{{ target_platform }}  # [linux]
         # hack to force the solver to work
         - libllvm{{ major_ver }} {{ version }}
       run:
@@ -82,12 +80,11 @@ outputs:
         - libcxx >={{ version }}
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
         - gxx_impl_{{ target_platform }}  # [linux]
-#TODO: DO WE NEED THIS?
-    # Since transitive run_exports are not currently possible
-    # (here I would like the run dependency on clangxx to pull in the run_exports from it).
-    run_exports:
-      strong:
-        - libcxx >={{ version }}
+    # # Since transitive run_exports are not currently possible
+    # # (here I would like the run dependency on clangxx to pull in the run_exports from it).
+    # run_exports:
+    #   strong:
+    #     - libcxx >={{ version }}
     test:
       commands:
         - echo {{ MACOSX_DEPLOYMENT_TARGET }}  # [linux]
