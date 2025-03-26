@@ -15,8 +15,8 @@ cross_target_platform:
   - osx-64     # [x86_64]
   - osx-arm64  # [not x86_64]
 macos_machine:
-  - x86_64-apple-darwin13.4.0  # [osx and x86_64]
-  - arm64-apple-darwin20.0.0   # [osx and arm64]
+  - x86_64-apple-darwin13.4.0  # [x86_64]
+  - arm64-apple-darwin20.0.0   # [not x86_64]
 uname_machine:
   - x86_64  # [x86_64]
   - arm64   # [not x86_64]
