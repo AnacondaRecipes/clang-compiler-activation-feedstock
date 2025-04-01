@@ -10,6 +10,23 @@ MACOSX_DEPLOYMENT_TARGET:  # [linux]
 version:
   - 17.0.6
 
+c_compiler:           # [osx]
+  - clang_bootstrap   # [osx]
+cxx_compiler:         # [osx]
+  - clang_bootstrap   # [osx]
+
+# c_compiler_version:     # [linux]
+#   - 11.2.0              # [linux]
+# cxx_compiler_version:   # [linux]
+#   - 11.2.0              # [linux]
+
+c_compiler_version:
+  - 11.2.0              # [linux]
+  - 17.0.6   # [osx]
+cxx_compiler_version:
+  - 11.2.0              # [linux]
+  - 17.0.6   # [osx]
+
 # everything below is zipped
 cross_target_platform:
   - osx-64     # [x86_64]
