@@ -5,7 +5,7 @@
 
 {% set build_number = 0 %}
 
-{% set bootstrap_version = "14" %}
+{% set bootstrap_version = "17" %}
 
 package:
   name: clang-compiler-activation
