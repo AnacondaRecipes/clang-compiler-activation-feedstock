@@ -13,7 +13,6 @@ CONDA_BUILD_SYSROOT:
   - /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk
   # - /Library/Developer/CommandLineTools/SDKs/MacOSX14.5.sdk
 
-
 version:
   - 17.0.6
 
@@ -29,10 +28,10 @@ cxx_compiler:         # [osx]
 
 c_compiler_version:
   - 11.2.0              # [linux]
-  - 17.0.6   # [osx]
+  - 17.0.6              # [osx]
 cxx_compiler_version:
   - 11.2.0              # [linux]
-  - 17.0.6   # [osx]
+  - 17.0.6              # [osx]
 
 # everything below is zipped
 cross_target_platform:
