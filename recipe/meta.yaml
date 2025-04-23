@@ -5,7 +5,7 @@
 
 {% set build_number = 0 %}
 
-{% set bootstrap_version = "17" %}
+{% set bootstrap_version = "14" %}
 
 package:
   name: clang-compiler-activation
@@ -43,11 +43,11 @@ outputs:
       # - ld64     # [cross_target_platform == target_platform]
       # - cctools  # [cross_target_platform == target_platform]
       # This brings in libraries for linux too. Split this again?
-# DO WE NEED THIS      - compiler-rt {{ bootstrap_version }}
+      - compiler-rt {{ bootstrap_version }}
       # For OSX, compiler-rt library includes both x86_64 and arm64.
       # Therefore `compiler-rt_osx-64` and `compiler-rt_osx-arm64` are basically the same
       # and clobber each other. Don't bring both here.
-# DO WE NEED THIS      - compiler-rt_{{ cross_target_platform }} {{ bootstrap_version }}     # [linux]
+      - compiler-rt_{{ cross_target_platform }} {{ bootstrap_version }}     # [linux]
       - gcc_impl_{{ target_platform }}       # [linux]
     test:
       commands:
