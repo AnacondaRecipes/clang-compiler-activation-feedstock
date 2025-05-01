@@ -24,9 +24,9 @@ build:
 requirements:
   build:
     - cctools_{{ target_platform }}  # [osx]
-    - libcxx {{ bootstrap_version }}
+    - libcxx {{ bootstrap_version }} # [unix]
     - gcc_{{ target_platform }}      # [linux]
-    - clang {{ bootstrap_version }}            # [osx]
+    - clang {{ bootstrap_version }}  # [osx]
 
 outputs:
   - name: clang_impl_{{ cross_target_platform }}
@@ -75,7 +75,7 @@ outputs:
         - cctools_{{ target_platform }}   # [osx]
       host:
         - clangxx {{ bootstrap_version }}
-        - libcxx {{ bootstrap_version }}         # [osx]
+        - libcxx {{ bootstrap_version }} # [unix]
         - {{ pin_subpackage('clang_impl_' ~ cross_target_platform, exact=True) }}
         - gxx_impl_{{ target_platform }}  # [linux]
         # hack to force the solver to work
@@ -83,14 +83,14 @@ outputs:
       run:
         - clangxx {{ bootstrap_version }}
         # This is not needed in Linux for cross-compiling in a conda-build env, but is needed outside
-        - libcxx >={{ bootstrap_version }}
+        - libcxx {{ bootstrap_version }} # [unix]
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
         - gxx_impl_{{ target_platform }}            # [linux]
     # Since transitive run_exports are not currently possible
     # (here I would like the run dependency on clangxx to pull in the run_exports from it).
     run_exports:
       strong:
-        - libcxx >={{ version }}
+        - libcxx {{ version }} # [unix]
     test:
       commands:
         - echo {{ MACOSX_DEPLOYMENT_TARGET }}  # [linux]
@@ -109,7 +109,7 @@ outputs:
       # (here I would like the run dependency on clangxx to pull in the run_exports from it).
       run_exports:
         strong:
-          - libcxx >={{ bootstrap_version }}
+          - libcxx {{ bootstrap_version }} # [unix]
     requirements:
       run:
         - {{ pin_subpackage("clangxx_impl_" ~ cross_target_platform, exact=True) }}
@@ -122,7 +122,7 @@ outputs:
     # (here I would like the run dependency on clangxx to pull in the run_exports from it).
     run_exports:
       strong:
-        - libcxx >={{ version }}
+        - libcxx {{ version }} # [unix]
 
   - name: clang_bootstrap_{{ cross_target_platform }}
     script: install-clang-bootstrap.sh
@@ -131,7 +131,7 @@ outputs:
         - cctools_{{ target_platform }}  # [osx]
       host:
         - clangxx {{ bootstrap_version }}
-        - libcxx {{ bootstrap_version }}        # [cross_target_platform in ("osx-64", "osx-arm64")]
+        - libcxx {{ bootstrap_version }} # [unix]
         - cctools_{{ cross_target_platform }}
         - ld64_{{ cross_target_platform }}
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}

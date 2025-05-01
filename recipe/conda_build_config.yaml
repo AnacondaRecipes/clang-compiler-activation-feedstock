@@ -4,13 +4,13 @@ CBUILD:
   - x86_64-apple-darwin13.4.0    # [osx and x86_64]
   - arm64-apple-darwin20.0.0     # [osx and arm64]
 
-MACOSX_DEPLOYMENT_TARGET:  # [linux]
-  - 10.9                   # [linux]
+# MACOSX_DEPLOYMENT_TARGET:  # [linux]
+#   - 10.9                   # [linux]
 
 # if you don't have the same version of the SDK,
 # substitute for something > 12 for local development
-CONDA_BUILD_SYSROOT:
-  - /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk
+# CONDA_BUILD_SYSROOT:
+  # - /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk
   # - /Library/Developer/CommandLineTools/SDKs/MacOSX14.5.sdk
 
 version:
@@ -20,11 +20,6 @@ c_compiler:           # [osx]
   - clang_bootstrap   # [osx]
 cxx_compiler:         # [osx]
   - clang_bootstrap   # [osx]
-
-# c_compiler_version:     # [linux]
-#   - 11.2.0              # [linux]
-# cxx_compiler_version:   # [linux]
-#   - 11.2.0              # [linux]
 
 c_compiler_version:
   - 11.2.0              # [linux]
