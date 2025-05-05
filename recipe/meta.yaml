@@ -20,8 +20,10 @@ package:
 #   url: https://github.com/llvm/llvm-project/releases/download/llvmorg-{{ version.replace(".rc", "-rc") }}/llvm-project-{{ version.replace(".rc", "rc") }}.src.tar.xz
 #   sha256: 326335a830f2e32d06d0a36393b5455d17dc73e0bd1211065227ee014f92cbf8  # [version == "13.0.1"]
 
+
 build:
-  skip: true  # [win]
+  # TODO: this almost works on linux, I'm still not sure we need it though.
+  skip: true  # [win or linux]
   number: {{ build_number }}
 
 requirements:
