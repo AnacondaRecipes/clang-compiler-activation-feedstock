@@ -7,6 +7,9 @@
 
 {% set last_major = "14" %}
 
+# Based heavily on commit 4c4f99e in the conda-forge feedstock:
+# https://github.com/conda-forge/clang-compiler-activation-feedstock/tree/4c4f99e
+
 package:
   name: clang-compiler-activation
   version: {{ version }}
@@ -30,7 +33,7 @@ requirements:
 
 outputs:
   - name: clang_impl_{{ cross_target_platform }}
-    script: install-clang_impl.sh #TODO: RENAME to install-clang.sh?
+    script: install-clang.sh
     requirements:
       - clang {{ last_major }}
       - llvm-tools {{ last_major }}
@@ -38,16 +41,9 @@ outputs:
       - cctools_{{ cross_target_platform }}
       - ld64_{{ cross_target_platform }}
       - ld64_{{ target_platform }}           # [osx]
-      # this brings in an extra symlink of ld -> x86_64-apple-darwin13.4.0-ld
-      # adding these generated an error w/ libtool: https://github.com/conda-forge/libtool-feedstock/issues/24
-      # - ld64     # [cross_target_platform == target_platform]
-      # - cctools  # [cross_target_platform == target_platform]
-      # This brings in libraries for linux too. Split this again?
-      - compiler-rt {{ last_major }} 
-      # For OSX, compiler-rt library includes both x86_64 and arm64.
-      # Therefore `compiler-rt_osx-64` and `compiler-rt_osx-arm64` are basically the same
-      # and clobber each other. Don't bring both here.
-      - compiler-rt_{{ cross_target_platform }} {{ last_major }}     # [linux]
+      # The last version of compiler-rt for osx-64 is 12, so this is a hack around that
+      - compiler-rt >=12          # [(linux and x86_64)]
+      - compiler-rt_{{ cross_target_platform }}    # [linux]
       - gcc_impl_{{ target_platform }}       # [linux]
     test:
       commands:
@@ -55,7 +51,7 @@ outputs:
         - {{ macos_machine }}-clang --version
 
   - name: clang_{{ cross_target_platform }}
-    script: install-clang.sh #TODO: RENAME to install-clang-scripts.sh?
+    script: install-clang-scripts.sh
     requirements:
       run:
         - {{ pin_subpackage("clang_impl_" ~ cross_target_platform, exact=True) }}
@@ -65,7 +61,7 @@ outputs:
         - {{ macos_machine }}-clang --version
 
   - name: clangxx_impl_{{ cross_target_platform }}
-    script: install-clangxx_impl.sh #TODO: RENAME to install-clangxx.sh?
+    script: install-clangxx.sh
     requirements:
       build:
         - cctools_{{ target_platform }}   # [osx]
@@ -100,8 +96,8 @@ outputs:
         - {{ macos_machine }}-clang++ --version
 
   - name: clangxx_{{ cross_target_platform }}
-    script: install-clangxx.sh #TODO: rename to install-clangxx-scripts.sh?
-    # TODO: this is not in cf
+    script: install-clangxx-scripts.sh
+  # TODO: this is not in cf
     # build:
     #   # Since transitive run_exports are not currently possible
     #   # (here I would like the run dependency on clangxx to pull in the run_exports from it).

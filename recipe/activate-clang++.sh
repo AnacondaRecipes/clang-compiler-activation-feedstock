@@ -49,8 +49,8 @@ function _tc_activation() {
     for thing in "$@"; do
       case "${thing}" in
         *,*)
-          newval="${thing#*,}"
-          thing="${thing%%,*}"
+          newval=$(echo "${thing}" | sed "s,^[^\,]*\,\(.*\),\1,")
+          thing=$(echo "${thing}" | sed "s,^\([^\,]*\)\,.*,\1,")
           ;;
         *)
           newval="${tc_prefix}${thing}"
@@ -99,7 +99,7 @@ fi
 
 _tc_activation \
   activate @CHOST@- \
-  "CLANGXX,${CXX:-@CHOST@-clang++}" \
+  clang++ \
   "CXX,${CXX:-@CHOST@-clang++}" \
   "CXX_FOR_BUILD,${CONDA_PREFIX}/bin/@CXX_FOR_BUILD@" \
   "CXXFLAGS,${CXXFLAGS:-${CXXFLAGS_USED}}" \
