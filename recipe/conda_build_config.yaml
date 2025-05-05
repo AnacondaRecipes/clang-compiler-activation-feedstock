@@ -4,7 +4,7 @@ CBUILD:
   - x86_64-apple-darwin13.4.0    # [osx and x86_64]
   - arm64-apple-darwin20.0.0     # [osx and arm64]
 
-MACOSX_DEPLOYMENT_TARGET:  # [linux]
+MACOSX_DEPLOYMENT_TARGET:   # [linux]
   - 10.15                   # [linux]
 
 # if you don't have the same version of the SDK,
@@ -14,7 +14,7 @@ MACOSX_DEPLOYMENT_TARGET:  # [linux]
   # - /Library/Developer/CommandLineTools/SDKs/MacOSX14.5.sdk
 
 version:
-  - 17.0.6
+  - 14.0.6
 
 c_compiler:           # [osx]
   - clang_bootstrap   # [osx]
@@ -23,10 +23,10 @@ cxx_compiler:         # [osx]
 
 c_compiler_version:
   - 11.2.0              # [linux]
-  - 17.0.6              # [osx]
+  - 14.0.6              # [osx]
 cxx_compiler_version:
   - 11.2.0              # [linux]
-  - 17.0.6              # [osx]
+  - 14.0.6              # [osx]
 
 # everything below is zipped
 cross_target_platform:
