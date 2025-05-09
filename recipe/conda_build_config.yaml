@@ -30,29 +30,20 @@ cxx_compiler_version:
 
 # everything below is zipped
 cross_target_platform:
-  - osx-64
-  - osx-arm64
+  - osx-64     # [osx and x86_64]
+  - osx-arm64  # [osx and arm64]
 macos_machine:
-  - x86_64-apple-darwin13.4.0
-  - arm64-apple-darwin20.0.0
+  - x86_64-apple-darwin13.4.0  # [osx and x86_64]
+  - arm64-apple-darwin20.0.0   # [osx and arm64]
 uname_machine:
-  - x86_64
-  - arm64
+  - x86_64  # [osx and x86_64]
+  - arm64   # [osx and arm64]
 meson_cpu_family:
-  - x86_64
-  - aarch64
+  - x86_64  # [osx and x86_64]
+  - aarch64 # [osx and arm64]
 uname_kernel_release:
-  - 13.4.0
-  - 20.0.0
+  - 13.4.0  # [osx and x86_64]
+  - 20.0.0  # [osx and arm64]
 FINAL_PYTHON_SYSCONFIGDATA_NAME:
-  - _sysconfigdata_x86_64_apple_darwin13_4_0
-  - _sysconfigdata_arm64_apple_darwin20_0_0
-
-zip_keys:
-  -
-    - cross_target_platform
-    - macos_machine
-    - meson_cpu_family
-    - uname_machine
-    - uname_kernel_release
-    - FINAL_PYTHON_SYSCONFIGDATA_NAME
+  - _sysconfigdata_x86_64_apple_darwin13_4_0  # [osx and x86_64]
+  - _sysconfigdata_arm64_apple_darwin20_0_0  # [osx and arm64]
