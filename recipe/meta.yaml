@@ -132,6 +132,12 @@ outputs:
         - {{ pin_subpackage('clangxx_' ~ cross_target_platform, exact=True) }}
         # hack to force the solver to work
         - libllvm{{ last_major }} {{ last_major }}
+      run:
+        - libllvm{{ last_major }}
+        - libcxx >={{ last_major }}
+        - libffi
+        - zlib
+        - libclang-cpp{{ last_major }}
     build:
       always_include_files:
         - bin/
@@ -140,6 +146,9 @@ outputs:
         - lib/
         - libexec/
         - share/
+      missing_dso_whitelist:
+        - $RPATH/libtapi.dylib  # [osx]
+        - "*/libc++.1.dylib"    # [osx]
       ignore_run_exports_from:
         - libllvm{{ last_major }}
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
