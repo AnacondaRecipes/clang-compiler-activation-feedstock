@@ -39,10 +39,8 @@ outputs:
     requirements:
       - clang {{ last_major }}
       - llvm-tools {{ last_major }}
-      - cctools_{{ target_platform }}        # [osx]
-      - cctools_{{ cross_target_platform }}
-      - ld64_{{ cross_target_platform }}
-      - ld64_{{ target_platform }}           # [osx]
+      - cctools  # [osx]
+      - ld64  # [osx]
       # The last version of compiler-rt for osx-64 is 12, so this is a hack around that
       - compiler-rt >=12          # [(linux and x86_64)]
       - compiler-rt_{{ cross_target_platform }}    # [linux]
@@ -66,7 +64,7 @@ outputs:
     script: install-clangxx.sh
     requirements:
       build:
-        - cctools_{{ target_platform }}   # [osx]
+        - cctools  # [osx]
       host:
         - clangxx {{ last_major }}
         - libcxx {{ last_major }}         # [osx]
@@ -124,7 +122,7 @@ outputs:
     script: install-clang-bootstrap.sh
     requirements:
       build:
-        - cctools_{{ target_platform }}  # [osx]
+        - cctools  # [osx]
       host:
         - clangxx {{ last_major }}
         - libcxx {{ last_major }}        # [cross_target_platform in ("osx-64", "osx-arm64")]
@@ -157,14 +155,16 @@ outputs:
       license_family: Apache
       license_file: LLVM_LICENSE.txt
       summary: clang compiler components in one package for bootstrapping clang
+      description: Bootstrap package containing both C and C++ Clang compilers for building Clang itself
+  
 
 about:
   home: https://github.com/AnacondaRecipes/clang-compiler-activation-feedstock
   license: BSD-3-Clause
   license_family: BSD
   license_file: LICENSE.txt
-  license_url: https://github.com/AnacondaRecipes/clang-compiler-activation-feedstock/blob/master/LICENSE.txt
-  summary: clang compilers for conda-build 3
+  summary: clang compilers for conda-build
+  description: This package provides Clang compiler activation scripts for conda-build.
   doc_url: https://github.com/AnacondaRecipes/clang-compiler-activation-feedstock
   dev_url: https://github.com/AnacondaRecipes/clang-compiler-activation-feedstock
 
@@ -175,6 +175,4 @@ extra:
     - katietz
     - h-vetinari
   skip-lints:
-    - missing_description
-    - missing_doc_source_url
     - missing_tests
