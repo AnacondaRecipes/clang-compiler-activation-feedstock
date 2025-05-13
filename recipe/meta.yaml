@@ -78,12 +78,6 @@ outputs:
         - libcxx >={{ last_major }}
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
         - gxx_impl_{{ target_platform }}            # [linux]
-    # TODO: this is not in cf - do we need it?
-    # # Since transitive run_exports are not currently possible
-    # # (here I would like the run dependency on clangxx to pull in the run_exports from it).
-    # run_exports:
-    #   strong:
-    #     - libcxx {{ libcxx_major }} # [unix]
     test:
       commands:
         - echo {{ MACOSX_DEPLOYMENT_TARGET }}  # [linux]
@@ -97,13 +91,6 @@ outputs:
 
   - name: clangxx_{{ cross_target_platform }}
     script: install-clangxx-scripts.sh
-  # TODO: this is not in cf
-    # build:
-    #   # Since transitive run_exports are not currently possible
-    #   # (here I would like the run dependency on clangxx to pull in the run_exports from it).
-    #   run_exports:
-    #     strong:
-    #       - libcxx {{ libcxx_major }} # [unix]
     requirements:
       run:
         - {{ pin_subpackage("clangxx_impl_" ~ cross_target_platform, exact=True) }}
