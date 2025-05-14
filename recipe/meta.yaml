@@ -28,7 +28,7 @@ build:
 
 requirements:
   build:
-    - cctools_{{ target_platform }}  # [osx]
+    - cctools 986 # [osx]
     - libcxx {{ last_major }}
     - gcc_{{ target_platform }}      # [linux]
     - clang {{ last_major }}  # [osx]
@@ -39,8 +39,8 @@ outputs:
     requirements:
       - clang {{ last_major }}
       - llvm-tools {{ last_major }}
-      - cctools  # [osx]
-      - ld64  # [osx]
+      - cctools 986 # [osx]
+      - ld64 711 # [osx]
       # The last version of compiler-rt for osx-64 is 12, so this is a hack around that
       - compiler-rt >=12          # [(linux and x86_64)]
       - compiler-rt_{{ cross_target_platform }}    # [linux]
@@ -64,7 +64,7 @@ outputs:
     script: install-clangxx.sh
     requirements:
       build:
-        - cctools  # [osx]
+        - cctools 986 # [osx]
       host:
         - clangxx {{ last_major }}
         - libcxx {{ last_major }}         # [osx]
@@ -109,12 +109,12 @@ outputs:
     script: install-clang-bootstrap.sh
     requirements:
       build:
-        - cctools  # [osx]
+        - cctools 986 # [osx]
       host:
         - clangxx {{ last_major }}
         - libcxx {{ last_major }}        # [cross_target_platform in ("osx-64", "osx-arm64")]
-        - cctools_{{ cross_target_platform }}  # [linux]
-        - ld64_{{ cross_target_platform }}  # [linux]
+        - cctools 986 # [linux]
+        - ld64 711  # [linux]
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
         - {{ pin_subpackage('clangxx_' ~ cross_target_platform, exact=True) }}
         # hack to force the solver to work
