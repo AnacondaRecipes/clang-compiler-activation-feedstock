@@ -3,9 +3,9 @@
 {% endif %}
 {% set major_ver = version.split(".")[0] %}
 
-{% set build_number = 0 %}
+{% set build_number = 1 %}
 
-{% set last_major = "14" %}
+{% set last_major = "17" %}
 
 # Based heavily on commit 4c4f99e in the conda-forge feedstock:
 # https://github.com/conda-forge/clang-compiler-activation-feedstock/tree/4c4f99e

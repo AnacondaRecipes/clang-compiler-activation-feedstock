@@ -2,10 +2,9 @@
 build_parameters:
   - "--suppress-variables"
 
-upload_without_merge: True
-
-upload_channels:
-  - llvm-17.0.6-stage0
+staging_channel_upload_target: llvm-17.0.6-stage1
 
 channels:
   - llvm-17.0.6-stage0
+
+aggregate_check: false
