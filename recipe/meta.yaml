@@ -152,7 +152,7 @@ outputs:
         - {{ pin_subpackage('clangxx_' ~ cross_target_platform, exact=True) }}
       missing_dso_whitelist:
         - lib/libLLVM-{{ last_major }}.dylib
-        - lib/libc++.1.dylib
+        - "*/lib/libc++.1.dylib"
         - lib/libicu*.dylib
         - lib/libz*.dylib
         - lib/libxml*.dylib
