@@ -83,8 +83,9 @@ function activate_clangxx() {
 # When people are using conda-build, assume that adding rpath during build, and pointing at
 #    the host env's includes and libs is helpful default behavior
 if [ "${CONDA_BUILD:-0}" = "1" ]; then
-  CXXFLAGS_USED="@CXXFLAGS@ -isystem ${PREFIX}/include -fdebug-prefix-map=${SRC_DIR}=/usr/local/src/conda/${PKG_NAME}-${PKG_VERSION} -fdebug-prefix-map=${PREFIX}=/usr/local/src/conda-prefix"
-  DEBUG_CXXFLAGS_USED="@CXXFLAGS@ @DEBUG_CXXFLAGS@ -isystem ${PREFIX}/include -fdebug-prefix-map=${SRC_DIR}=/usr/local/src/conda/${PKG_NAME}-${PKG_VERSION} -fdebug-prefix-map=${PREFIX}=/usr/local/src/conda-prefix"
+  MAJOR_VERSION=$(echo ${PKG_VERSION} | cut -f1 -d".")
+  CXXFLAGS_USED="@CXXFLAGS@ -I${BUILD_PREFIX}/lib/clang/${MAJOR_VERSION}/include -isystem ${PREFIX}/include -fdebug-prefix-map=${SRC_DIR}=/usr/local/src/conda/${PKG_NAME}-${PKG_VERSION} -fdebug-prefix-map=${PREFIX}=/usr/local/src/conda-prefix"
+  DEBUG_CXXFLAGS_USED="@CXXFLAGS@ @DEBUG_CXXFLAGS@ -I${BUILD_PREFIX}/lib/clang/${MAJOR_VERSION}/include -isystem ${PREFIX}/include -fdebug-prefix-map=${SRC_DIR}=/usr/local/src/conda/${PKG_NAME}-${PKG_VERSION} -fdebug-prefix-map=${PREFIX}=/usr/local/src/conda-prefix"
 else
   CXXFLAGS_USED="@CXXFLAGS@ -isystem ${CONDA_PREFIX}/include"
   DEBUG_CXXFLAGS_USED="@CXXFLAGS@ @DEBUG_CXXFLAGS@ -isystem ${CONDA_PREFIX}/include"
@@ -95,6 +96,19 @@ if [ "${CONDA_BUILD:-0}" = "1" ]; then
     rm -f /tmp/old-env-$$.txt || true
   fi
   env > /tmp/old-env-$$.txt
+fi
+
+# These preprocessor macros are required when including C standard headers in C++ code
+# __STDC_LIMIT_MACROS - Exposes INT*_MAX and other limit macros from <stdint.h>/<cstdint>
+# __STDC_CONSTANT_MACROS - Exposes UINT*_C and other literal macros from <stdint.h>/<cstdint>
+# __STDC_FORMAT_MACROS - Exposes PRId64 and other printf format macros from <inttypes.h>/<cinttypes>
+# These are needed for proper interaction with system headers, especially when building LLVM
+# which relies heavily on fixed-width integer types
+if [[ "${CFLAGS:-}" != *"-D__STDC_LIMIT_MACROS"* ]]; then
+  CFLAGS="${CFLAGS} -D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS"
+fi
+if [[ "${CXXFLAGS:-}" != *"-D__STDC_LIMIT_MACROS"* ]]; then
+  CXXFLAGS="${CXXFLAGS} -D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS"
 fi
 
 _tc_activation \
