@@ -26,25 +26,6 @@ build:
   skip: true  # [win or linux]
   number: {{ build_number }}
 
-  # Intentionally ignore overlinking warnings for bootstrap packages
-  # The clang_bootstrap output is a special case - it's meant to be self-contained for building Clang itself
-  # These libraries are used by various tools within the package but we don't want to declare them as runtime
-  # dependencies because:
-  # 1. They're already included in the package itself
-  # 2. Adding them as run dependencies would create circular dependencies
-  # 3. The bootstrap package needs to have minimal external dependencies for bootstrapping
-  overlinking_ignore_patterns:
-    - lib/libLLVM-17.dylib
-    - lib/libc++.1.dylib
-    - lib/libicu*.dylib
-    - lib/libz*.dylib
-    - lib/libxml*.dylib
-    - lib/libtapi.dylib
-    - lib/liblzma.*.dylib
-    - lib/libiconv.*.dylib
-    - lib/liblz4.*.dylib
-    - lib/libffi.*.dylib
-
 requirements:
   build:
     - cctools 986 # [osx]

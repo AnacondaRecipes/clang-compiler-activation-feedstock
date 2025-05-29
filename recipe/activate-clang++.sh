@@ -82,13 +82,12 @@ function _tc_activation() {
 function activate_clangxx() {
 # When people are using conda-build, assume that adding rpath during build, and pointing at
 #    the host env's includes and libs is helpful default behavior
-MAJOR_VERSION=$(echo ${PKG_VERSION} | cut -f1 -d".")
 if [ "${CONDA_BUILD:-0}" = "1" ]; then
   CXXFLAGS_USED="@CXXFLAGS@ -isystem ${CONDA_BUILD_SYSROOT}/usr/include -isystem ${PREFIX}/include -fdebug-prefix-map=${SRC_DIR}=/usr/local/src/conda/${PKG_NAME}-${PKG_VERSION} -fdebug-prefix-map=${PREFIX}=/usr/local/src/conda-prefix"
   DEBUG_CXXFLAGS_USED="@CXXFLAGS@ @DEBUG_CXXFLAGS@ -isystem ${PREFIX}/include -fdebug-prefix-map=${SRC_DIR}=/usr/local/src/conda/${PKG_NAME}-${PKG_VERSION} -fdebug-prefix-map=${PREFIX}=/usr/local/src/conda-prefix"
 else
-  CXXFLAGS_USED="@CXXFLAGS@ -I${CONDA_PREFIX}/lib/clang/${MAJOR_VERSION}/include -I${CONDA_PREFIX}/include/c++/v1 -isystem ${CONDA_PREFIX}/include"
-  DEBUG_CXXFLAGS_USED="@CXXFLAGS@ @DEBUG_CXXFLAGS@ -I${CONDA_PREFIX}/lib/clang/${MAJOR_VERSION}/include -I${CONDA_PREFIX}/include/c++/v1 -isystem ${CONDA_PREFIX}/include"
+  CXXFLAGS_USED="@CXXFLAGS@ -isystem ${CONDA_PREFIX}/include"
+  DEBUG_CXXFLAGS_USED="@CXXFLAGS@ @DEBUG_CXXFLAGS@ -isystem ${CONDA_PREFIX}/include"
 fi
 
 if [ "${CONDA_BUILD:-0}" = "1" ]; then
