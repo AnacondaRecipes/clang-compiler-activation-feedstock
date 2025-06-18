@@ -4,8 +4,7 @@ CHOST=${macos_machine}
 
 FINAL_CPPFLAGS="-D_FORTIFY_SOURCE=2"
 FINAL_CFLAGS="-ftree-vectorize -fPIC -fstack-protector-strong -O2 -pipe"
-# TODO revisit this in llvm19 and see if we can remove -isystem \$PREFIX/include/c++/v1. -stdlib=libc++ should be sufficient. It is currently not likely due to the version of cctools and ld64 for mac not being optimal for llvm17. 
-FINAL_CXXFLAGS="-ftree-vectorize -fPIC -fstack-protector-strong -O2 -pipe -stdlib=libc++ -isystem \$PREFIX/include/c++/v1 -fvisibility-inlines-hidden -fmessage-length=0"
+FINAL_CXXFLAGS="-ftree-vectorize -fPIC -fstack-protector-strong -O2 -pipe -stdlib=libc++ -fvisibility-inlines-hidden -fmessage-length=0"
 if [[ "${uname_machine}" == "x86_64" ]]; then
   FINAL_CFLAGS="-march=core2 -mtune=haswell -mssse3 $FINAL_CFLAGS"
   FINAL_CXXFLAGS="-march=core2 -mtune=haswell -mssse3 $FINAL_CXXFLAGS"
