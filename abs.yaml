@@ -2,8 +2,3 @@
 build_parameters:
   - "--suppress-variables"
   - "--skip-existing"
-
-
-staging_channel_upload_target: llvm-17.0.6-verify-2
-channels:
-  - llvm-17.0.6-verify-2
