@@ -20,27 +20,39 @@ cxx_compiler:         # [osx]
 
 c_compiler_version:
   - 11.2.0              # [linux]
-  - 17.0.6              # [osx]
+  - 19.1.7              # [osx]
 cxx_compiler_version:
   - 11.2.0              # [linux]
-  - 17.0.6              # [osx]
+  - 19.1.7              # [osx]
 
 # everything below is zipped
 cross_target_platform:
   - osx-64     # [osx and x86_64]
   - osx-arm64  # [osx and arm64]
+  - linux-64  # [linux and x86_64]
+  - linux-aarch64  # [linux and aarch64]
 macos_machine:
   - x86_64-apple-darwin13.4.0  # [osx and x86_64]
   - arm64-apple-darwin20.0.0   # [osx and arm64]
+  - x86_64-conda-linux-gnu      # [linux and x86_64]
+  - aarch64-conda-linux-gnu     # [linux and aarch64]
 uname_machine:
   - x86_64  # [osx and x86_64]
   - arm64   # [osx and arm64]
+  - x86_64  # [linux and x86_64]
+  - aarch64 # [linux and aarch64]
 meson_cpu_family:
   - x86_64  # [osx and x86_64]
   - aarch64 # [osx and arm64]
+  - x86_64  # [linux and x86_64]
+  - aarch64 # [linux and aarch64]
 uname_kernel_release:
   - 13.4.0  # [osx and x86_64]
   - 20.0.0  # [osx and arm64]
+  - 5.15.0  # [linux and x86_64]
+  - 5.15.0  # [linux and aarch64]
 FINAL_PYTHON_SYSCONFIGDATA_NAME:
   - _sysconfigdata_x86_64_apple_darwin13_4_0  # [osx and x86_64]
   - _sysconfigdata_arm64_apple_darwin20_0_0  # [osx and arm64]
+  - _sysconfigdata_x86_64_conda_linux_gnu  # [linux and x86_64]
+  - _sysconfigdata_aarch64_conda_linux_gnu # [linux and aarch64]

@@ -1,11 +1,11 @@
 {% if version is not defined %}
-{% set version = "19.1.1" %}
+{% set version = "19.1.7" %}
 {% endif %}
 {% set major_ver = version.split(".")[0] %}
 
-{% set build_number = 0 %}
+{% set build_number = 2 %}
 
-{% set last_major = "17" %}
+{% set last_major = "19" %}
 
 # Based heavily on commit 4c4f99e in the conda-forge feedstock:
 # https://github.com/conda-forge/clang-compiler-activation-feedstock/tree/4c4f99e
@@ -22,8 +22,7 @@ package:
 
 
 build:
-  # TODO: this almost works on linux, I'm still not sure we need it though.
-  skip: true  # [win or linux]
+  skip: true  # [win]
   number: {{ build_number }}
 
 requirements:
@@ -35,33 +34,35 @@ requirements:
 
 outputs:
   - name: clang_impl_{{ cross_target_platform }}
-    script: install-clang.sh
+    script: install-clang_impl.sh
     requirements:
       - clang {{ last_major }}
       - llvm-tools {{ last_major }}
       - cctools 1010.6  # [osx]
       - ld64 951.9  # [osx]
-      # The last version of compiler-rt for osx-64 is 12, so this is a hack around that
-      - compiler-rt >=12          # [(linux and x86_64)]
-      - compiler-rt_{{ cross_target_platform }}    # [linux]
+      - compiler-rt {{ version }}
       - gcc_impl_{{ target_platform }}       # [linux]
     test:
       commands:
         - {{ CBUILD }}-clang --version
+        - {{ CBUILD }}-clang-cpp --version
         - {{ macos_machine }}-clang --version
+        - {{ macos_machine }}-clang-cpp --version
 
   - name: clang_{{ cross_target_platform }}
-    script: install-clang-scripts.sh
+    script: install-clang.sh
     requirements:
       run:
         - {{ pin_subpackage("clang_impl_" ~ cross_target_platform, exact=True) }}
     test:
       commands:
-        - {{ CBUILD }}-clang --version
-        - {{ macos_machine }}-clang --version
+        - ${CC} --version
+        - ${CPP} --version
+        - ${CC_FOR_BUILD} --version
+        - ${CPP_FOR_BUILD} --version
 
   - name: clangxx_impl_{{ cross_target_platform }}
-    script: install-clangxx.sh
+    script: install-clangxx_impl.sh
     requirements:
       build:
         - cctools 1010.6  # [osx]
@@ -90,20 +91,21 @@ outputs:
         - {{ macos_machine }}-clang++ --version
 
   - name: clangxx_{{ cross_target_platform }}
-    script: install-clangxx-scripts.sh
+    script: install-clangxx.sh
+    build:
+      # Since transitive run_exports are not currently possible
+      # (here I would like the run dependency on clangxx to pull in the run_exports from it).
+      run_exports:
+        strong:
+          - libcxx >={{ last_major }}
     requirements:
       run:
         - {{ pin_subpackage("clangxx_impl_" ~ cross_target_platform, exact=True) }}
         - {{ pin_subpackage("clang_" ~ cross_target_platform, exact=True) }}
     test:
       commands:
-        - {{ CBUILD }}-clang++ --version
-        - {{ macos_machine }}-clang++ --version
-    # Since transitive run_exports are not currently possible
-    # (here I would like the run dependency on clangxx to pull in the run_exports from it).
-    run_exports:
-      strong:
-        - libcxx >={{ last_major }}
+        - ${CXX} --version
+        - ${CXX_FOR_BUILD} --version
 
   - name: clang_bootstrap_{{ cross_target_platform }}
     script: install-clang-bootstrap.sh
@@ -113,8 +115,6 @@ outputs:
       host:
         - clangxx {{ last_major }}
         - libcxx {{ last_major }}        # [cross_target_platform in ("osx-64", "osx-arm64")]
-        - cctools 1010.6  # [linux]
-        - ld64 951.9   # [linux]
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
         - {{ pin_subpackage('clangxx_' ~ cross_target_platform, exact=True) }}
         # hack to force the solver to work
@@ -143,10 +143,11 @@ outputs:
         - lib/liblz4.*.dylib
         - lib/libffi.*.dylib
         - lib/libclang-cpp.{{ last_major }}.dylib
-      skip: true  # [not osx]
+      skip: true  # [win]
     test:
       commands:
         - {{ macos_machine }}-clang --version
+        - {{ macos_machine }}-clang-cpp --version
         - {{ macos_machine }}-clang++ --version
     about:
       home: https://llvm.org
