@@ -3,7 +3,7 @@
 {% endif %}
 {% set major_ver = version.split(".")[0] %}
 
-{% set build_number = 3 %}
+{% set build_number = 4 %}
 
 {% set last_major = "17" %}
 
@@ -41,8 +41,7 @@ outputs:
       - llvm-tools {{ last_major }}
       - cctools 986 # [osx]
       - ld64 711 # [osx]
-      # The last version of compiler-rt for osx-64 is 12, so this is a hack around that
-      - compiler-rt >=12          # [(linux and x86_64)]
+      - compiler-rt {{ version }}
       - compiler-rt_{{ cross_target_platform }}    # [linux]
       - gcc_impl_{{ target_platform }}       # [linux]
     test:
