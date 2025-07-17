@@ -41,8 +41,7 @@ outputs:
       - llvm-tools {{ last_major }}
       - cctools 1010.6  # [osx]
       - ld64 951.9  # [osx]
-      # The last version of compiler-rt for osx-64 is 12, so this is a hack around that
-      - compiler-rt >=12          # [(linux and x86_64)]
+      - compiler-rt {{ version }}
       - compiler-rt_{{ cross_target_platform }}    # [linux]
       - gcc_impl_{{ target_platform }}       # [linux]
     test:
