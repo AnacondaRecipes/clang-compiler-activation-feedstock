@@ -43,6 +43,7 @@ outputs:
       - cctools 1010.6  # [osx]
       - ld64 951.9  # [osx]
       - compiler-rt {{ version }}
+      - compiler-rt_{{ cross_target_platform }}    # [linux]
       - gcc_impl_{{ target_platform }}       # [linux]
     test:
       commands:
