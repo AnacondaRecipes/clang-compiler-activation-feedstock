@@ -22,7 +22,9 @@ package:
 
 
 build:
-  skip: true  # [win]
+  # clang activation for linux will happen in ctng-compiler-activation-feedstock
+  #  See: https://github.com/conda-forge/ctng-compiler-activation-feedstock/pull/102/
+  skip: true  # [win or linux]
   number: {{ build_number }}
 
 requirements:
