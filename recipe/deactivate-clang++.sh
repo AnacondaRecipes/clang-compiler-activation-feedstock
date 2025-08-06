@@ -81,15 +81,8 @@ function _tc_activation() {
 
 function deactivate_clangxx() {
 
-# When people are using conda-build, assume that adding rpath during build, and pointing at
-#    the host env's includes and libs is helpful default behavior
-if [ "${CONDA_BUILD:-0}" = "1" ]; then
-  CXXFLAGS_USED="@CXXFLAGS@ -isystem ${PREFIX}/include -fdebug-prefix-map=${SRC_DIR}=/usr/local/src/conda/${PKG_NAME}-${PKG_VERSION} -fdebug-prefix-map=${PREFIX}=/usr/local/src/conda-prefix"
-  DEBUG_CXXFLAGS_USED="@CXXFLAGS@ @DEBUG_CXXFLAGS@ -isystem ${PREFIX}/include -fdebug-prefix-map=${SRC_DIR}=/usr/local/src/conda/${PKG_NAME}-${PKG_VERSION} -fdebug-prefix-map=${PREFIX}=/usr/local/src/conda-prefix"
-else
-  CXXFLAGS_USED="@CXXFLAGS@ -isystem ${CONDA_PREFIX}/include"
-  DEBUG_CXXFLAGS_USED="@CXXFLAGS@ @DEBUG_CXXFLAGS@ -isystem ${CONDA_PREFIX}/include"
-fi
+# For deactivation, we don't need to reconstruct the flag values
+# The _tc_activation function will restore from CONDA_BACKUP_* variables
 
 if [ "${CONDA_BUILD:-0}" = "1" ]; then
   if [ -f /tmp/old-env-$$.txt ]; then
@@ -103,8 +96,8 @@ _tc_activation \
   "CLANGXX,${CXX:-@CHOST@-clang++}" \
   "CXX,${CXX:-@CHOST@-clang++}" \
   "CXX_FOR_BUILD,${CONDA_PREFIX}/bin/@CXX_FOR_BUILD@" \
-  "CXXFLAGS,${CXXFLAGS:-${CXXFLAGS_USED}}" \
-  "DEBUG_CXXFLAGS,${DEBUG_CXXFLAGS:-${DEBUG_CXXFLAGS_USED}}"
+  "CXXFLAGS," \
+  "DEBUG_CXXFLAGS,"
 
 if [ $? -ne 0 ]; then
   echo "ERROR: $(_get_sourced_filename) failed, see above for details"
