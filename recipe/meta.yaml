@@ -43,6 +43,8 @@ outputs:
         - {{ stdlib('c') }}
       host:
         - clang {{ last_major }}
+      run:
+        - clang {{ last_major }}
         - llvm-tools {{ last_major }}
         - cctools 1010.6  # [osx]
         - ld64 951.9  # [osx]
