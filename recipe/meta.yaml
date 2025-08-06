@@ -7,8 +7,8 @@
 
 {% set last_major = "19" %}
 
-# Based heavily on commit 4c4f99e in the conda-forge feedstock:
-# https://github.com/conda-forge/clang-compiler-activation-feedstock/tree/4c4f99e
+# Based heavily on commit ac43b49 in the conda-forge feedstock:
+# https://github.com/conda-forge/clang-compiler-activation-feedstock/tree/ac43b49
 
 package:
   name: clang-compiler-activation
@@ -29,6 +29,7 @@ build:
 
 requirements:
   build:
+    - {{ stdlib('c') }}
     - cctools 1010.6  # [osx]
     - libcxx {{ last_major }}
     - gcc_{{ target_platform }}      # [linux]
@@ -38,13 +39,16 @@ outputs:
   - name: clang_impl_{{ cross_target_platform }}
     script: install-clang_impl.sh
     requirements:
-      - clang {{ last_major }}
-      - llvm-tools {{ last_major }}
-      - cctools 1010.6  # [osx]
-      - ld64 951.9  # [osx]
-      - compiler-rt {{ version }}
-      - compiler-rt_{{ cross_target_platform }}    # [linux]
-      - gcc_impl_{{ target_platform }}       # [linux]
+      build:
+        - {{ stdlib('c') }}
+      host:
+        - clang {{ last_major }}
+        - llvm-tools {{ last_major }}
+        - cctools 1010.6  # [osx]
+        - ld64 951.9  # [osx]
+        - compiler-rt {{ version }}
+        - compiler-rt_{{ cross_target_platform }}    # [linux]
+        - gcc_impl_{{ target_platform }}       # [linux]
     test:
       commands:
         - {{ CBUILD }}-clang --version
@@ -68,6 +72,7 @@ outputs:
     script: install-clangxx_impl.sh
     requirements:
       build:
+        - {{ stdlib('c') }}
         - cctools 1010.6  # [osx]
       host:
         - clangxx {{ last_major }}
@@ -114,6 +119,7 @@ outputs:
     script: install-clang-bootstrap.sh
     requirements:
       build:
+        - {{ stdlib('c') }}
         - cctools 1010.6  # [osx]
       host:
         - clangxx {{ last_major }}
