@@ -73,6 +73,10 @@ function _tc_activation() {
         else
           eval unset '${from}${thing}'
         fi
+        # During deactivation, also unset the CONDA_BACKUP_ variable
+        if [ "${act_nature}" = "deactivate" ]; then
+          eval unset 'CONDA_BACKUP_${thing}'
+        fi
       fi
     done
   done
@@ -143,11 +147,11 @@ _tc_activation \
   "SDKROOT," \
   "CMAKE_ARGS," \
   "MESON_ARGS," \
-  "ac_cv_func_malloc_0_nonnull,yes" \
-  "ac_cv_func_realloc_0_nonnull,yes" \
-  "host_alias,@CHOST@" \
-  "build_alias,@CBUILD@" \
-  "BUILD,@CBUILD@"
+  "ac_cv_func_malloc_0_nonnull," \
+  "ac_cv_func_realloc_0_nonnull," \
+  "host_alias," \
+  "build_alias," \
+  "BUILD,"
 
 if [ $? -ne 0 ]; then
   echo "ERROR: $(_get_sourced_filename) failed, see above for details"

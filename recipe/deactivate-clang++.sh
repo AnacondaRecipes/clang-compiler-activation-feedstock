@@ -73,6 +73,10 @@ function _tc_activation() {
         else
           eval unset '${from}${thing}'
         fi
+        # During deactivation, also unset the CONDA_BACKUP_ variable
+        if [ "${act_nature}" = "deactivate" ]; then
+          eval unset 'CONDA_BACKUP_${thing}'
+        fi
       fi
     done
   done
