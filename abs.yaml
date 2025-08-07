@@ -1,9 +1,4 @@
 # the conda build parameters to use
 build_parameters:
   - "--suppress-variables"
-
-staging_channel_upload_target: llvm-19.1.7-stage2-build-1
-
-channels:
-  - https://staging.continuum.io/prefect/llvm-19.1.7-stage2-build-1
-  - https://staging.continuum.io/prefect/llvm-19.1.7-stage2-build-0
+  - "-c https://staging.continuum.io/prefect/llvm-19.1.7-stage2-build-2"
