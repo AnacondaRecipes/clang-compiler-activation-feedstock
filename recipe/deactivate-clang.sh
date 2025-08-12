@@ -49,8 +49,8 @@ function _tc_activation() {
     for thing in "$@"; do
       case "${thing}" in
         *,*)
-          newval=$(echo "${thing}" | sed "s,^[^\,]*\,\(.*\),\1,")
-          thing=$(echo "${thing}" | sed "s,^\([^\,]*\)\,.*,\1,")
+          newval="${thing#*,}"
+          thing="${thing%%,*}"
           ;;
         *)
           newval="${tc_prefix}${thing}"
@@ -73,6 +73,10 @@ function _tc_activation() {
         else
           eval unset '${from}${thing}'
         fi
+        # During deactivation, also unset the CONDA_BACKUP_ variable
+        if [ "${act_nature}" = "deactivate" ]; then
+          eval unset 'CONDA_BACKUP_${thing}'
+        fi
       fi
     done
   done
@@ -82,27 +86,8 @@ function _tc_activation() {
 
 function deactivate_clang() {
 
-# When people are using conda-build, assume that adding rpath during build, and pointing at
-#    the host env's includes and libs is helpful default behavior
-if [ "${CONDA_BUILD:-0}" = "1" ]; then
-  CFLAGS_USED="@CFLAGS@ -isystem ${PREFIX}/include -fdebug-prefix-map=${SRC_DIR}=/usr/local/src/conda/${PKG_NAME}-${PKG_VERSION} -fdebug-prefix-map=${PREFIX}=/usr/local/src/conda-prefix"
-  DEBUG_CFLAGS_USED="@CFLAGS@ @DEBUG_CFLAGS@ -isystem ${PREFIX}/include -fdebug-prefix-map=${SRC_DIR}=/usr/local/src/conda/${PKG_NAME}-${PKG_VERSION} -fdebug-prefix-map=${PREFIX}=/usr/local/src/conda-prefix"
-  LDFLAGS_USED="@LDFLAGS@ -Wl,-rpath,${PREFIX}/lib -L${PREFIX}/lib"
-  LDFLAGS_LD_USED="@LDFLAGS_LD@ -rpath ${PREFIX}/lib -L${PREFIX}/lib"
-  CPPFLAGS_USED="@CPPFLAGS@ -isystem ${PREFIX}/include"
-  CMAKE_PREFIX_PATH_USED="${CMAKE_PREFIX_PATH}:${PREFIX}"
-else
-  CFLAGS_USED="@CFLAGS@ -isystem ${CONDA_PREFIX}/include"
-  DEBUG_CFLAGS_USED="@CFLAGS@ @DEBUG_CFLAGS@ -isystem ${CONDA_PREFIX}/include"
-  LDFLAGS_USED="@LDFLAGS@ -Wl,-rpath,${CONDA_PREFIX}/lib -L${CONDA_PREFIX}/lib"
-  LDFLAGS_LD_USED="@LDFLAGS_LD@ -rpath ${CONDA_PREFIX}/lib -L${CONDA_PREFIX}/lib"
-  CPPFLAGS_USED="@CPPFLAGS@ -isystem ${CONDA_PREFIX}/include"
-  CMAKE_PREFIX_PATH_USED="${CMAKE_PREFIX_PATH}:${CONDA_PREFIX}"
-fi
-
-if [ "${MACOSX_DEPLOYMENT_TARGET:-0}" != "0" ]; then
-  CPPFLAGS_USED="$CPPFLAGS_USED -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}"
-fi
+# For deactivation, we don't need to reconstruct the flag values
+# The _tc_activation function will restore from CONDA_BACKUP_* variables
 
 if [ "${CONDA_BUILD:-0}" = "1" ]; then
   if [ -f /tmp/old-env-$$.txt ]; then
@@ -111,47 +96,62 @@ if [ "${CONDA_BUILD:-0}" = "1" ]; then
   env > /tmp/old-env-$$.txt
 fi
 
-CONDA_BUILD_SYSROOT_TEMP=${CONDA_BUILD_SYSROOT:-${SDKROOT:-0}}
-if [ "${CONDA_BUILD_SYSROOT_TEMP}" = "0" ]; then
-   CONDA_BUILD_SYSROOT_TEMP=$(xcrun --show-sdk-path)
-fi
+# For deactivation, we don't need to reconstruct sysroot paths
+# The _tc_activation function will restore from CONDA_BACKUP_* variables
 
 if [ "${CONDA_BUILD:-0}" = "1" ]; then
   # in conda build we need to unset CONDA_BUILD_SYSROOT
   _tc_activation \
     deactivate @CHOST@- \
-    "CONDA_BUILD_SYSROOT,${CONDA_BUILD_SYSROOT_TEMP}"
+    "CONDA_BUILD_SYSROOT,"
 fi
 
 _tc_activation \
   deactivate @CHOST@- "HOST,@CHOST@" \
   "CONDA_TOOLCHAIN_HOST,@CHOST@" \
   "CONDA_TOOLCHAIN_BUILD,@CBUILD@" \
-  ar as checksyms install_name_tool libtool lipo nm nmedit otool \
-  pagestuff ranlib redo_prebinding seg_addr_table seg_hack segedit size strings strip \
-  clang ld \
+  "AR,${AR:-@CHOST@-ar}" \
+  "AS,${AS:-@CHOST@-as}" \
+  "CHECKSYMS,${CHECKSYMS:-@CHOST@-checksyms}" \
+  "INSTALL_NAME_TOOL,${INSTALL_NAME_TOOL:-@CHOST@-install_name_tool}" \
+  "LIBTOOL,${LIBTOOL:-@CHOST@-libtool}" \
+  "LIPO,${LIPO:-@CHOST@-lipo}" \
+  "NM,${NM:-@CHOST@-nm}" \
+  "NMEDIT,${NMEDIT:-@CHOST@-nmedit}" \
+  "OTOOL,${OTOOL:-@CHOST@-otool}" \
+  "PAGESTUFF,${PAGESTUFF:-@CHOST@-pagestuff}" \
+  "RANLIB,${RANLIB:-@CHOST@-ranlib}" \
+  "REDO_PREBINDING,${REDO_PREBINDING:-@CHOST@-redo_prebinding}" \
+  "SEG_ADDR_TABLE,${SEG_ADDR_TABLE:-@CHOST@-seg_addr_table}" \
+  "SEG_HACK,${SEG_HACK:-@CHOST@-seg_hack}" \
+  "SEGEDIT,${SEGEDIT:-@CHOST@-segedit}" \
+  "SIZE,${SIZE:-@CHOST@-size}" \
+  "STRINGS,${STRINGS:-@CHOST@-strings}" \
+  "STRIP,${STRIP:-@CHOST@-strip}" \
+  "CLANG,${CLANG:-@CHOST@-clang}" \
+  "LD,${LD:-@CHOST@-ld}" \
   "CC,${CC:-@CHOST@-clang}" \
   "OBJC,${OBJC:-@CHOST@-clang}" \
+  "CPP,${CPP:-@CHOST@-clang-cpp}" \
   "CC_FOR_BUILD,${CONDA_PREFIX}/bin/@CC_FOR_BUILD@" \
   "OBJC_FOR_BUILD,${CONDA_PREFIX}/bin/@OBJC_FOR_BUILD@" \
-  "CPPFLAGS,${CPPFLAGS:-${CPPFLAGS_USED}}" \
-  "CFLAGS,${CFLAGS:-${CFLAGS_USED}}" \
-  "LDFLAGS,${LDFLAGS:-${LDFLAGS_USED}}" \
-  "LDFLAGS_LD,${LDFLAGS_LD:-${LDFLAGS_LD_USED}}" \
-  "DEBUG_CFLAGS,${DEBUG_CFLAGS:-${DEBUG_CFLAGS_USED}}" \
-  "_CONDA_PYTHON_SYSCONFIGDATA_NAME,${_CONDA_PYTHON_SYSCONFIGDATA_NAME:-@_PYTHON_SYSCONFIGDATA_NAME@}" \
-  "CMAKE_PREFIX_PATH,${CMAKE_PREFIX_PATH:-${CMAKE_PREFIX_PATH_USED}}" \
-  "CONDA_BUILD_CROSS_COMPILATION,@CONDA_BUILD_CROSS_COMPILATION@" \
-  "SDKROOT,${CONDA_BUILD_SYSROOT_TEMP}" \
-  "CMAKE_ARGS,${_CMAKE_ARGS:-}" \
-  "MESON_ARGS,${_MESON_ARGS:-}" \
-  "ac_cv_func_malloc_0_nonnull,yes" \
-  "ac_cv_func_realloc_0_nonnull,yes" \
-  "host_alias,@CHOST@" \
-  "build_alias,@CBUILD@" \
-  "BUILD,@CBUILD@"
-
-unset CONDA_BUILD_SYSROOT_TEMP
+  "CPP_FOR_BUILD,${CONDA_PREFIX}/bin/@CPP_FOR_BUILD@" \
+  "CPPFLAGS," \
+  "CFLAGS," \
+  "LDFLAGS," \
+  "LDFLAGS_LD," \
+  "DEBUG_CFLAGS," \
+  "_CONDA_PYTHON_SYSCONFIGDATA_NAME," \
+  "CMAKE_PREFIX_PATH," \
+  "CONDA_BUILD_CROSS_COMPILATION," \
+  "SDKROOT," \
+  "CMAKE_ARGS," \
+  "MESON_ARGS," \
+  "ac_cv_func_malloc_0_nonnull," \
+  "ac_cv_func_realloc_0_nonnull," \
+  "host_alias," \
+  "build_alias," \
+  "BUILD,"
 
 if [ $? -ne 0 ]; then
   echo "ERROR: $(_get_sourced_filename) failed, see above for details"

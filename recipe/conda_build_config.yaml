@@ -1,17 +1,6 @@
 CBUILD:
-  - x86_64-conda-linux-gnu       # [linux64]
-  - aarch64-conda-linux-gnu      # [linux and aarch64]
   - x86_64-apple-darwin13.4.0    # [osx and x86_64]
   - arm64-apple-darwin20.0.0     # [osx and arm64]
-
-MACOSX_DEPLOYMENT_TARGET:   # [linux]
-  - 10.15                   # [linux]
-
-# if you don't have the same version of the SDK,
-# substitute for something > 12 for local development
-# CONDA_BUILD_SYSROOT:
-  # - /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk
-  # - /Library/Developer/CommandLineTools/SDKs/MacOSX14.5.sdk
 
 c_compiler:           # [osx]
   - clang_bootstrap   # [osx]
@@ -19,19 +8,13 @@ cxx_compiler:         # [osx]
   - clang_bootstrap   # [osx]
 
 c_compiler_version:
-  - 11.2.0              # [linux]
-  - 17.0.6              # [osx]
+  - 19.1.7              # [osx]
 cxx_compiler_version:
-  - 11.2.0              # [linux]
-  - 17.0.6              # [osx]
+  - 19.1.7              # [osx]
 
-# everything below is zipped
 cross_target_platform:
   - osx-64     # [osx and x86_64]
   - osx-arm64  # [osx and arm64]
-macos_machine:
-  - x86_64-apple-darwin13.4.0  # [osx and x86_64]
-  - arm64-apple-darwin20.0.0   # [osx and arm64]
 uname_machine:
   - x86_64  # [osx and x86_64]
   - arm64   # [osx and arm64]
@@ -41,6 +24,7 @@ meson_cpu_family:
 uname_kernel_release:
   - 13.4.0  # [osx and x86_64]
   - 20.0.0  # [osx and arm64]
+
 FINAL_PYTHON_SYSCONFIGDATA_NAME:
   - _sysconfigdata_x86_64_apple_darwin13_4_0  # [osx and x86_64]
   - _sysconfigdata_arm64_apple_darwin20_0_0  # [osx and arm64]

@@ -1,14 +1,14 @@
 {% if version is not defined %}
-{% set version = "17.0.6" %}
+{% set version = "19.1.7" %}
 {% endif %}
 {% set major_ver = version.split(".")[0] %}
 
-{% set build_number = 4 %}
+{% set build_number = 2 %}
 
-{% set last_major = "17" %}
+{% set last_major = "19" %}
 
-# Based heavily on commit 4c4f99e in the conda-forge feedstock:
-# https://github.com/conda-forge/clang-compiler-activation-feedstock/tree/4c4f99e
+# Based heavily on commit ac43b49 in the conda-forge feedstock:
+# https://github.com/conda-forge/clang-compiler-activation-feedstock/tree/ac43b49
 
 package:
   name: clang-compiler-activation
@@ -22,48 +22,60 @@ package:
 
 
 build:
-  # TODO: this almost works on linux, I'm still not sure we need it though.
+  # clang activation for linux will happen in ctng-compiler-activation-feedstock
+  #  See: https://github.com/conda-forge/ctng-compiler-activation-feedstock/pull/102/
   skip: true  # [win or linux]
   number: {{ build_number }}
 
 requirements:
   build:
-    - cctools 986 # [osx]
+    - {{ stdlib('c') }}
+    - cctools 1010.6  # [osx]
     - libcxx {{ last_major }}
     - gcc_{{ target_platform }}      # [linux]
     - clang {{ last_major }}  # [osx]
 
 outputs:
   - name: clang_impl_{{ cross_target_platform }}
-    script: install-clang.sh
+    script: install-clang_impl.sh
     requirements:
-      - clang {{ last_major }}
-      - llvm-tools {{ last_major }}
-      - cctools 986 # [osx]
-      - ld64 711 # [osx]
-      - compiler-rt {{ version }}
-      - compiler-rt_{{ cross_target_platform }}    # [linux]
-      - gcc_impl_{{ target_platform }}       # [linux]
+      build:
+        - {{ stdlib('c') }}
+      host:
+        - clang {{ last_major }}
+      run:
+        - clang {{ last_major }}
+        - llvm-tools {{ last_major }}
+        - cctools 1010.6  # [osx]
+        - ld64 951.9  # [osx]
+        - compiler-rt {{ version }}
+        - compiler-rt_{{ cross_target_platform }}    # [linux]
+        - gcc_impl_{{ target_platform }}       # [linux]
     test:
       commands:
         - {{ CBUILD }}-clang --version
+        - {{ CBUILD }}-clang-cpp --version
         - {{ macos_machine }}-clang --version
+        - {{ macos_machine }}-clang-cpp --version
 
   - name: clang_{{ cross_target_platform }}
-    script: install-clang-scripts.sh
+    script: install-clang.sh
     requirements:
       run:
         - {{ pin_subpackage("clang_impl_" ~ cross_target_platform, exact=True) }}
     test:
       commands:
-        - {{ CBUILD }}-clang --version
-        - {{ macos_machine }}-clang --version
+        - ${CC} --version
+        - ${CPP} --version
+        - ${CC_FOR_BUILD} --version
+        - ${CPP_FOR_BUILD} --version
 
   - name: clangxx_impl_{{ cross_target_platform }}
-    script: install-clangxx.sh
+    script: install-clangxx_impl.sh
     requirements:
       build:
-        - cctools 986 # [osx]
+        - {{ stdlib('c') }}
+        - cctools 1010.6  # [osx]
       host:
         - clangxx {{ last_major }}
         - libcxx {{ last_major }}         # [osx]
@@ -89,31 +101,31 @@ outputs:
         - {{ macos_machine }}-clang++ --version
 
   - name: clangxx_{{ cross_target_platform }}
-    script: install-clangxx-scripts.sh
+    script: install-clangxx.sh
+    build:
+      # Since transitive run_exports are not currently possible
+      # (here I would like the run dependency on clangxx to pull in the run_exports from it).
+      run_exports:
+        strong:
+          - libcxx >={{ last_major }}
     requirements:
       run:
         - {{ pin_subpackage("clangxx_impl_" ~ cross_target_platform, exact=True) }}
         - {{ pin_subpackage("clang_" ~ cross_target_platform, exact=True) }}
     test:
       commands:
-        - {{ CBUILD }}-clang++ --version
-        - {{ macos_machine }}-clang++ --version
-    # Since transitive run_exports are not currently possible
-    # (here I would like the run dependency on clangxx to pull in the run_exports from it).
-    run_exports:
-      strong:
-        - libcxx >={{ last_major }}
+        - ${CXX} --version
+        - ${CXX_FOR_BUILD} --version
 
   - name: clang_bootstrap_{{ cross_target_platform }}
     script: install-clang-bootstrap.sh
     requirements:
       build:
-        - cctools 986 # [osx]
+        - {{ stdlib('c') }}
+        - cctools 1010.6  # [osx]
       host:
         - clangxx {{ last_major }}
         - libcxx {{ last_major }}        # [cross_target_platform in ("osx-64", "osx-arm64")]
-        - cctools 986 # [linux]
-        - ld64 711  # [linux]
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
         - {{ pin_subpackage('clangxx_' ~ cross_target_platform, exact=True) }}
         # hack to force the solver to work
@@ -142,10 +154,11 @@ outputs:
         - lib/liblz4.*.dylib
         - lib/libffi.*.dylib
         - lib/libclang-cpp.{{ last_major }}.dylib
-      skip: true  # [not osx]
+      skip: true  # [win]
     test:
       commands:
         - {{ macos_machine }}-clang --version
+        - {{ macos_machine }}-clang-cpp --version
         - {{ macos_machine }}-clang++ --version
     about:
       home: https://llvm.org
