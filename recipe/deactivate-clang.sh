@@ -73,6 +73,10 @@ function _tc_activation() {
         else
           eval unset '${from}${thing}'
         fi
+        # During deactivation, also unset the CONDA_BACKUP_ variable
+        if [ "${act_nature}" = "deactivate" ]; then
+          eval unset 'CONDA_BACKUP_${thing}'
+        fi
       fi
     done
   done
@@ -82,27 +86,8 @@ function _tc_activation() {
 
 function deactivate_clang() {
 
-# When people are using conda-build, assume that adding rpath during build, and pointing at
-#    the host env's includes and libs is helpful default behavior
-if [ "${CONDA_BUILD:-0}" = "1" ]; then
-  CFLAGS_USED="@CFLAGS@ -isystem ${PREFIX}/include -fdebug-prefix-map=${SRC_DIR}=/usr/local/src/conda/${PKG_NAME}-${PKG_VERSION} -fdebug-prefix-map=${PREFIX}=/usr/local/src/conda-prefix"
-  DEBUG_CFLAGS_USED="@CFLAGS@ @DEBUG_CFLAGS@ -isystem ${PREFIX}/include -fdebug-prefix-map=${SRC_DIR}=/usr/local/src/conda/${PKG_NAME}-${PKG_VERSION} -fdebug-prefix-map=${PREFIX}=/usr/local/src/conda-prefix"
-  LDFLAGS_USED="@LDFLAGS@ -Wl,-rpath,${PREFIX}/lib -L${PREFIX}/lib"
-  LDFLAGS_LD_USED="@LDFLAGS_LD@ -rpath ${PREFIX}/lib -L${PREFIX}/lib"
-  CPPFLAGS_USED="@CPPFLAGS@ -isystem ${PREFIX}/include"
-  CMAKE_PREFIX_PATH_USED="${CMAKE_PREFIX_PATH}:${PREFIX}"
-else
-  CFLAGS_USED="@CFLAGS@ -isystem ${CONDA_PREFIX}/include"
-  DEBUG_CFLAGS_USED="@CFLAGS@ @DEBUG_CFLAGS@ -isystem ${CONDA_PREFIX}/include"
-  LDFLAGS_USED="@LDFLAGS@ -Wl,-rpath,${CONDA_PREFIX}/lib -L${CONDA_PREFIX}/lib"
-  LDFLAGS_LD_USED="@LDFLAGS_LD@ -rpath ${CONDA_PREFIX}/lib -L${CONDA_PREFIX}/lib"
-  CPPFLAGS_USED="@CPPFLAGS@ -isystem ${CONDA_PREFIX}/include"
-  CMAKE_PREFIX_PATH_USED="${CMAKE_PREFIX_PATH}:${CONDA_PREFIX}"
-fi
-
-if [ "${MACOSX_DEPLOYMENT_TARGET:-0}" != "0" ]; then
-  CPPFLAGS_USED="$CPPFLAGS_USED -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}"
-fi
+# For deactivation, we don't need to reconstruct the flag values
+# The _tc_activation function will restore from CONDA_BACKUP_* variables
 
 if [ "${CONDA_BUILD:-0}" = "1" ]; then
   if [ -f /tmp/old-env-$$.txt ]; then
@@ -111,22 +96,14 @@ if [ "${CONDA_BUILD:-0}" = "1" ]; then
   env > /tmp/old-env-$$.txt
 fi
 
-CONDA_BUILD_SYSROOT_TEMP=${CONDA_BUILD_SYSROOT:-${SDKROOT:-0}}
-if [ "${CONDA_BUILD_SYSROOT_TEMP}" = "0" ]; then
-  if [[ "$OSTYPE" == "darwin"* ]]; then
-    # macOS-specific sysroot detection
-    CONDA_BUILD_SYSROOT_TEMP=$(xcrun --show-sdk-path)
-  else
-    # On Linux, typically no sysroot is needed for native compilation
-    CONDA_BUILD_SYSROOT_TEMP=""
-  fi
-fi
+# For deactivation, we don't need to reconstruct sysroot paths
+# The _tc_activation function will restore from CONDA_BACKUP_* variables
 
 if [ "${CONDA_BUILD:-0}" = "1" ]; then
   # in conda build we need to unset CONDA_BUILD_SYSROOT
   _tc_activation \
     deactivate @CHOST@- \
-    "CONDA_BUILD_SYSROOT,${CONDA_BUILD_SYSROOT_TEMP}"
+    "CONDA_BUILD_SYSROOT,"
 fi
 
 _tc_activation \
@@ -159,24 +136,22 @@ _tc_activation \
   "CC_FOR_BUILD,${CONDA_PREFIX}/bin/@CC_FOR_BUILD@" \
   "OBJC_FOR_BUILD,${CONDA_PREFIX}/bin/@OBJC_FOR_BUILD@" \
   "CPP_FOR_BUILD,${CONDA_PREFIX}/bin/@CPP_FOR_BUILD@" \
-  "CPPFLAGS,${CPPFLAGS_USED}${CPPFLAGS:+ }${CPPFLAGS:-}" \
-  "CFLAGS,${CFLAGS_USED}${CFLAGS:+ }${CFLAGS:-}" \
-  "LDFLAGS,${LDFLAGS_USED}${LDFLAGS:+ }${LDFLAGS:-}" \
-  "LDFLAGS_LD,${LDFLAGS_LD_USED}${LDFLAGS_LD:+ }${LDFLAGS_LD:-}" \
-  "DEBUG_CFLAGS,${DEBUG_CFLAGS_USED}${DEBUG_CFLAGS:+ }${DEBUG_CFLAGS:-}" \
-  "_CONDA_PYTHON_SYSCONFIGDATA_NAME,${_CONDA_PYTHON_SYSCONFIGDATA_NAME:-@_PYTHON_SYSCONFIGDATA_NAME@}" \
-  "CMAKE_PREFIX_PATH,${CMAKE_PREFIX_PATH:-${CMAKE_PREFIX_PATH_USED}}" \
-  "CONDA_BUILD_CROSS_COMPILATION,@CONDA_BUILD_CROSS_COMPILATION@" \
-  "SDKROOT,${CONDA_BUILD_SYSROOT_TEMP}" \
-  "CMAKE_ARGS,${_CMAKE_ARGS:-}" \
-  "MESON_ARGS,${_MESON_ARGS:-}" \
-  "ac_cv_func_malloc_0_nonnull,yes" \
-  "ac_cv_func_realloc_0_nonnull,yes" \
-  "host_alias,@CHOST@" \
-  "build_alias,@CBUILD@" \
-  "BUILD,@CBUILD@"
-
-unset CONDA_BUILD_SYSROOT_TEMP
+  "CPPFLAGS," \
+  "CFLAGS," \
+  "LDFLAGS," \
+  "LDFLAGS_LD," \
+  "DEBUG_CFLAGS," \
+  "_CONDA_PYTHON_SYSCONFIGDATA_NAME," \
+  "CMAKE_PREFIX_PATH," \
+  "CONDA_BUILD_CROSS_COMPILATION," \
+  "SDKROOT," \
+  "CMAKE_ARGS," \
+  "MESON_ARGS," \
+  "ac_cv_func_malloc_0_nonnull," \
+  "ac_cv_func_realloc_0_nonnull," \
+  "host_alias," \
+  "build_alias," \
+  "BUILD,"
 
 if [ $? -ne 0 ]; then
   echo "ERROR: $(_get_sourced_filename) failed, see above for details"
