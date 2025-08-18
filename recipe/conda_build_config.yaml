@@ -8,9 +8,9 @@ cxx_compiler:         # [osx]
   - clang_bootstrap   # [osx]
 
 c_compiler_version:
-  - 19.1.7              # [osx]
+  - 20.1.8             # [osx]
 cxx_compiler_version:
-  - 19.1.7              # [osx]
+  - 20.1.8             # [osx]
 
 cross_target_platform:
   - osx-64     # [osx and x86_64]
