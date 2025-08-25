@@ -1,11 +1,11 @@
 {% if version is not defined %}
-{% set version = "19.1.7" %}
+{% set version = "20.1.8" %}
 {% endif %}
 {% set major_ver = version.split(".")[0] %}
 
-{% set build_number = 2 %}
+{% set build_number = 0 %}
 
-{% set last_major = "19" %}
+{% set last_major = "20" %}
 
 # Based heavily on commit ac43b49 in the conda-forge feedstock:
 # https://github.com/conda-forge/clang-compiler-activation-feedstock/tree/ac43b49
@@ -30,7 +30,7 @@ build:
 requirements:
   build:
     - {{ stdlib('c') }}
-    - cctools 1010.6  # [osx]
+    - cctools 1021.4  # [osx]
     - libcxx {{ last_major }}
     - gcc_{{ target_platform }}      # [linux]
     - clang {{ last_major }}  # [osx]
@@ -46,8 +46,8 @@ outputs:
       run:
         - clang {{ last_major }}
         - llvm-tools {{ last_major }}
-        - cctools 1010.6  # [osx]
-        - ld64 951.9  # [osx]
+        - cctools 1021.4  # [osx]
+        - ld64 954.16  # [osx]
         - compiler-rt {{ version }}
         - compiler-rt_{{ cross_target_platform }}    # [linux]
         - gcc_impl_{{ target_platform }}       # [linux]
@@ -75,7 +75,7 @@ outputs:
     requirements:
       build:
         - {{ stdlib('c') }}
-        - cctools 1010.6  # [osx]
+        - cctools 1021.4 # [osx]
       host:
         - clangxx {{ last_major }}
         - libcxx {{ last_major }}         # [osx]
@@ -122,7 +122,7 @@ outputs:
     requirements:
       build:
         - {{ stdlib('c') }}
-        - cctools 1010.6  # [osx]
+        - cctools 1021.4  # [osx]
       host:
         - clangxx {{ last_major }}
         - libcxx {{ last_major }}        # [cross_target_platform in ("osx-64", "osx-arm64")]
