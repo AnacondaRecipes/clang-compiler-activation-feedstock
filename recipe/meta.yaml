@@ -1,11 +1,11 @@
 {% if version is not defined %}
-{% set version = "20.1.8" %}
+{% set version = "21.1.8" %}
 {% endif %}
 {% set major_ver = version.split(".")[0] %}
 
 {% set build_number = 0 %}
 
-{% set last_major = "20" %}
+{% set last_major = "21" %}
 
 # Based heavily on commit ac43b49 in the conda-forge feedstock:
 # https://github.com/conda-forge/clang-compiler-activation-feedstock/tree/ac43b49
@@ -48,7 +48,8 @@ outputs:
         - llvm-tools {{ last_major }}
         - cctools 1021.4  # [osx]
         - ld64 954.16  # [osx]
-        - compiler-rt {{ version }}
+        # TODO: Re-enable after compiler-rt 21 is built
+        # - compiler-rt {{ version }}
         - compiler-rt_{{ cross_target_platform }}    # [linux]
         - gcc_impl_{{ target_platform }}       # [linux]
     test:
