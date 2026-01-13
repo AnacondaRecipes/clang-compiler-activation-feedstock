@@ -33,7 +33,7 @@ requirements:
     - cctools 1021.4  # [osx]
     - libcxx {{ last_major }}
     - gcc_{{ target_platform }}      # [linux]
-    - clang {{ last_major }}  # [osx]
+    - clangdev {{ last_major }}  # [osx]  # Stage 1: Use clangdev (from Stage 0), not clang (which we're creating)
 
 outputs:
   - name: clang_impl_{{ cross_target_platform }}
