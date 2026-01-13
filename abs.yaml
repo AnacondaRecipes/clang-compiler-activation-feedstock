@@ -1,4 +1,9 @@
-# the conda build parameters to use
 build_parameters:
   - "--suppress-variables"
-  - "-c https://staging.continuum.io/prefect/llvm-21.1.8-stage2-build-0"
+
+# Stage 1: Build clang-compiler-activation to create clang_bootstrap 21
+# Uses LLVM 20 compiler, points to Stage 0 channel
+staging_channel_upload_target: llvm-21.1.8-stage1-build-0
+
+channels:
+  - https://staging.continuum.io/prefect/llvm-21.1.8-stage0-build-0
