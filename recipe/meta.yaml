@@ -30,7 +30,8 @@ build:
 requirements:
   build:
     - {{ stdlib('c') }}
-    - cctools 1024.3  # [osx]
+    # cctools removed from build - has clang version constraint conflict
+    # install scripts only create symlinks, don't need cctools at build time
     - libcxx {{ last_major }}
     - gcc_{{ target_platform }}      # [linux]
     - clangdev {{ last_major }}  # [osx]  # Stage 1: Use clangdev (from Stage 0), not clang (which we're creating)
@@ -76,7 +77,7 @@ outputs:
     requirements:
       build:
         - {{ stdlib('c') }}
-        - cctools 1024.3  # [osx]
+        # cctools removed - not needed at build time
       host:
         - clangxx {{ last_major }}
         - libcxx {{ last_major }}         # [osx]
@@ -123,7 +124,7 @@ outputs:
     requirements:
       build:
         - {{ stdlib('c') }}
-        - cctools 1024.3  # [osx]
+        # cctools removed - not needed at build time
       host:
         - clangxx {{ last_major }}
         - libcxx {{ last_major }}        # [cross_target_platform in ("osx-64", "osx-arm64")]
