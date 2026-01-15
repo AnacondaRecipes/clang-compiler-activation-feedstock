@@ -30,7 +30,7 @@ build:
 requirements:
   build:
     - {{ stdlib('c') }}
-    - cctools 1024.3  # [osx]
+    - cctools 1021.4  # [osx]
     - libcxx {{ last_major }}
     - gcc_{{ target_platform }}      # [linux]
     - clangdev {{ last_major }}  # [osx]  # Stage 1: Use clangdev (from Stage 0), not clang (which we're creating)
@@ -46,8 +46,8 @@ outputs:
       run:
         - clang {{ last_major }}
         - llvm-tools {{ last_major }}
-        - cctools 1024.3  # [osx]
-        - ld64 955.13  # [osx]
+        - cctools 1021.4  # [osx]
+        - ld64 954.16  # [osx]
         # TODO: Re-enable after compiler-rt 21 is built
         # - compiler-rt {{ version }}
         - compiler-rt_{{ cross_target_platform }}    # [linux]
@@ -76,7 +76,7 @@ outputs:
     requirements:
       build:
         - {{ stdlib('c') }}
-        - cctools 1024.3 # [osx]
+        - cctools 1021.4 # [osx]
       host:
         - clangxx {{ last_major }}
         - libcxx {{ last_major }}         # [osx]
@@ -123,7 +123,7 @@ outputs:
     requirements:
       build:
         - {{ stdlib('c') }}
-        - cctools 1024.3  # [osx]
+        - cctools 1021.4  # [osx]
       host:
         - clangxx {{ last_major }}
         - libcxx {{ last_major }}        # [cross_target_platform in ("osx-64", "osx-arm64")]
