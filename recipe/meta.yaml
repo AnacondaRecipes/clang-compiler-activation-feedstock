@@ -30,11 +30,10 @@ build:
 requirements:
   build:
     - {{ stdlib('c') }}
-    # cctools removed from build - has clang version constraint conflict
-    # install scripts only create symlinks, don't need cctools at build time
+    - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
     - libcxx {{ last_major }}
     - gcc_{{ target_platform }}      # [linux]
-    - clangdev {{ last_major }}  # [osx]  # Stage 1: Use clangdev (from Stage 0), not clang (which we're creating)
+    - clangdev {{ last_major }}  # [osx]
 
 outputs:
   - name: clang_impl_{{ cross_target_platform }}
@@ -47,10 +46,8 @@ outputs:
       run:
         - clang {{ last_major }}
         - llvm-tools {{ last_major }}
-        # TODO: Re-enable cctools/ld64 in Stage 2 after they're rebuilt with clang 21
-        # For Stage 1, cctools has run_constrained: clang 20.* which conflicts with clang 21
-        # - cctools 1024.3  # [osx]
-        # - ld64 955.13  # [osx]
+        - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
+        - ld64 955.13  # [osx]     # Stage 2: ld64 now has clang 21.* constraint
         # TODO: Re-enable after compiler-rt 21 is built
         # - compiler-rt {{ version }}
         - compiler-rt_{{ cross_target_platform }}    # [linux]
@@ -79,7 +76,7 @@ outputs:
     requirements:
       build:
         - {{ stdlib('c') }}
-        # cctools removed - not needed at build time
+        - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
       host:
         - clangxx {{ last_major }}
         - libcxx {{ last_major }}         # [osx]
@@ -126,7 +123,7 @@ outputs:
     requirements:
       build:
         - {{ stdlib('c') }}
-        # cctools removed - not needed at build time
+        - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
       host:
         - clangxx {{ last_major }}
         - libcxx {{ last_major }}        # [cross_target_platform in ("osx-64", "osx-arm64")]
