@@ -47,8 +47,10 @@ outputs:
       run:
         - clang {{ last_major }}
         - llvm-tools {{ last_major }}
-        - cctools 1024.3  # [osx]
-        - ld64 955.13  # [osx]
+        # TODO: Re-enable cctools/ld64 in Stage 2 after they're rebuilt with clang 21
+        # For Stage 1, cctools has run_constrained: clang 20.* which conflicts with clang 21
+        # - cctools 1024.3  # [osx]
+        # - ld64 955.13  # [osx]
         # TODO: Re-enable after compiler-rt 21 is built
         # - compiler-rt {{ version }}
         - compiler-rt_{{ cross_target_platform }}    # [linux]
