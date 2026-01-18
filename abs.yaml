@@ -1,14 +1,10 @@
 build_parameters:
   - "--suppress-variables"
 
-# Stage 2: Rebuild clang-compiler-activation with cctools/ld64 re-enabled
-# cctools from Stage 2 now has run_constrained: clang 21.*
-staging_channel_upload_target: llvm-21.1.8-stage2-build-0
+# Stage 1 REBUILD: Fix clang_bootstrap to include llvm-tools (dsymutil)
+# Previous Stage 1 clang_bootstrap was missing dsymutil, causing cctools Stage 2 to fail
+staging_channel_upload_target: llvm-21.1.8-stage1-build-0
 
 channels:
-  # Stage 2 channel has cctools with clang 21.* constraint
-  - https://staging.continuum.io/pbp/llvm-21.1.8-stage2-build-0
-  # Stage 1 channel has clang_bootstrap 21
-  - https://staging.continuum.io/pbp/llvm-21.1.8-stage1-build-0
-  # Stage 0 channel has clangdev 21 and supporting packages
+  # Stage 0 channel has clangdev 21, llvm-tools 21, and supporting packages
   - https://staging.continuum.io/pbp/llvm-21.1.8-stage0-build-0

@@ -123,7 +123,8 @@ outputs:
     requirements:
       build:
         - {{ stdlib('c') }}
-        - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
+        # TODO: Re-enable in Stage 2 after cctools rebuilt with clang 21
+        # - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
       host:
         - clangxx {{ last_major }}
         - libcxx {{ last_major }}        # [cross_target_platform in ("osx-64", "osx-arm64")]
@@ -131,6 +132,8 @@ outputs:
         - {{ pin_subpackage('clangxx_' ~ cross_target_platform, exact=True) }}
         # hack to force the solver to work
         - libllvm{{ last_major }} {{ last_major }}
+        # dsymutil and other LLVM tools needed for clang to function properly
+        - llvm-tools {{ last_major }}
     build:
       always_include_files:
         - bin/
@@ -141,6 +144,7 @@ outputs:
         - share/
       ignore_run_exports_from:
         - libllvm{{ last_major }}
+        - llvm-tools {{ last_major }}
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
         - {{ pin_subpackage('clangxx_' ~ cross_target_platform, exact=True) }}
       missing_dso_whitelist:
