@@ -30,7 +30,8 @@ build:
 requirements:
   build:
     - {{ stdlib('c') }}
-    - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
+    # TODO: Re-enable in Stage 2 after cctools rebuilt with clang 21
+    # - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
     - libcxx {{ last_major }}
     - gcc_{{ target_platform }}      # [linux]
     - clangdev {{ last_major }}  # [osx]
@@ -46,8 +47,9 @@ outputs:
       run:
         - clang {{ last_major }}
         - llvm-tools {{ last_major }}
-        - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
-        - ld64 955.13  # [osx]     # Stage 2: ld64 now has clang 21.* constraint
+        # TODO: Re-enable in Stage 2 after cctools rebuilt with clang 21
+        # - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
+        # - ld64 955.13  # [osx]     # Stage 2: ld64 now has clang 21.* constraint
         # TODO: Re-enable after compiler-rt 21 is built
         # - compiler-rt {{ version }}
         - compiler-rt_{{ cross_target_platform }}    # [linux]
@@ -76,7 +78,8 @@ outputs:
     requirements:
       build:
         - {{ stdlib('c') }}
-        - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
+        # TODO: Re-enable in Stage 2 after cctools rebuilt with clang 21
+        # - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
       host:
         - clangxx {{ last_major }}
         - libcxx {{ last_major }}         # [osx]
