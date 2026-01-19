@@ -3,7 +3,7 @@
 {% endif %}
 {% set major_ver = version.split(".")[0] %}
 
-{% set build_number = 0 %}
+{% set build_number = 1 %}  # Stage 2: with cctools/ld64 re-enabled
 
 {% set last_major = "21" %}
 
@@ -30,8 +30,7 @@ build:
 requirements:
   build:
     - {{ stdlib('c') }}
-    # TODO: Re-enable in Stage 2 after cctools rebuilt with clang 21
-    # - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
+    - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
     - libcxx {{ last_major }}
     - gcc_{{ target_platform }}      # [linux]
     - clangdev {{ last_major }}  # [osx]
@@ -47,9 +46,8 @@ outputs:
       run:
         - clang {{ last_major }}
         - llvm-tools {{ last_major }}
-        # TODO: Re-enable in Stage 2 after cctools rebuilt with clang 21
-        # - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
-        # - ld64 955.13  # [osx]     # Stage 2: ld64 now has clang 21.* constraint
+        - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
+        - ld64 955.13  # [osx]     # Stage 2: ld64 now has clang 21.* constraint
         # TODO: Re-enable after compiler-rt 21 is built
         # - compiler-rt {{ version }}
         - compiler-rt_{{ cross_target_platform }}    # [linux]
@@ -78,8 +76,7 @@ outputs:
     requirements:
       build:
         - {{ stdlib('c') }}
-        # TODO: Re-enable in Stage 2 after cctools rebuilt with clang 21
-        # - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
+        - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
       host:
         - clangxx {{ last_major }}
         - libcxx {{ last_major }}         # [osx]
@@ -126,8 +123,7 @@ outputs:
     requirements:
       build:
         - {{ stdlib('c') }}
-        # TODO: Re-enable in Stage 2 after cctools rebuilt with clang 21
-        # - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
+        - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
       host:
         - clangxx {{ last_major }}
         - libcxx {{ last_major }}        # [cross_target_platform in ("osx-64", "osx-arm64")]

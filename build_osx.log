@@ -1,150 +1,97 @@
-[taskcluster 2026-01-15T02:51:57.945Z] Worker Type (aws-static/m2pro-ventura) settings:
-[taskcluster 2026-01-15T02:51:57.945Z]   {
-[taskcluster 2026-01-15T02:51:57.945Z]     "config": {
-[taskcluster 2026-01-15T02:51:57.945Z]       "deploymentId": ""
-[taskcluster 2026-01-15T02:51:57.945Z]     },
-[taskcluster 2026-01-15T02:51:57.945Z]     "generic-worker": {
-[taskcluster 2026-01-15T02:51:57.945Z]       "engine": "insecure",
-[taskcluster 2026-01-15T02:51:57.945Z]       "go-arch": "arm64",
-[taskcluster 2026-01-15T02:51:57.945Z]       "go-os": "darwin",
-[taskcluster 2026-01-15T02:51:57.945Z]       "go-version": "go1.24.5",
-[taskcluster 2026-01-15T02:51:57.945Z]       "release": "https://github.com/taskcluster/taskcluster/releases/tag/v88.0.2",
-[taskcluster 2026-01-15T02:51:57.945Z]       "revision": "fcaf4a25fc4a3eb8543bc8605d77ce319306d7c6",
-[taskcluster 2026-01-15T02:51:57.945Z]       "source": "https://github.com/taskcluster/taskcluster/commits/fcaf4a25fc4a3eb8543bc8605d77ce319306d7c6",
-[taskcluster 2026-01-15T02:51:57.945Z]       "version": "88.0.2"
-[taskcluster 2026-01-15T02:51:57.945Z]     }
-[taskcluster 2026-01-15T02:51:57.945Z]   }
-[taskcluster 2026-01-15T02:51:57.946Z] Task ID: MVagyEfqSpqrXjKqrRf8aw
-[taskcluster 2026-01-15T02:51:57.946Z] === Task Starting ===
-[taskcluster:warn 2026-01-15T02:51:58.356Z] [mounts] Could not reach purgecache service to see if caches need purging:
-[taskcluster:warn 2026-01-15T02:51:58.356Z] [mounts] 
-[taskcluster:warn 2026-01-15T02:51:58.356Z] CALL SUMMARY
-[taskcluster:warn 2026-01-15T02:51:58.356Z] ============
-[taskcluster:warn 2026-01-15T02:51:58.356Z] Method: GET
-[taskcluster:warn 2026-01-15T02:51:58.356Z] Service: taskcluster.anaconda.com:
-[taskcluster:warn 2026-01-15T02:51:58.356Z] Response Body:
-[taskcluster:warn 2026-01-15T02:51:58.356Z] {
-[taskcluster:warn 2026-01-15T02:51:58.356Z]   "code": "InsufficientScopes",
-[taskcluster:warn 2026-01-15T02:51:58.356Z]   "message": "Client ID worker/static/aws-static/m2pro-ventura/aws-m2pro-ventura-group/i-027198ff74408f5bd does not have sufficient scopes and is missing the following scopes:\n\n```\npurge-cache:purge-requests::aws-static/m2pro-ventura\n```\n\nThis request requires the client to satisfy the following scope expression:\n\n```\npurge-cache:purge-requests::aws-static/m2pro-ventura\n```\n\n---\n\n* method:     purgeRequests\n* errorCode:  InsufficientScopes\n* statusCode: 403\n* time:       2026-01-15T02:51:58.355Z",
-[taskcluster:warn 2026-01-15T02:51:58.356Z]   "requestInfo": {
-[taskcluster:warn 2026-01-15T02:51:58.356Z]     "method": "purgeRequests",
-[taskcluster:warn 2026-01-15T02:51:58.356Z]     "params": {
-[taskcluster:warn 2026-01-15T02:51:58.356Z]       "0": "aws-static/m2pro-ventura",
-[taskcluster:warn 2026-01-15T02:51:58.356Z]       "workerPoolId": "aws-static/m2pro-ventura"
-[taskcluster:warn 2026-01-15T02:51:58.356Z]     },
-[taskcluster:warn 2026-01-15T02:51:58.356Z]     "payload": {},
-[taskcluster:warn 2026-01-15T02:51:58.356Z]     "time": "2026-01-15T02:51:58.355Z"
-[taskcluster:warn 2026-01-15T02:51:58.356Z]   }
-[taskcluster:warn 2026-01-15T02:51:58.356Z] }
-[taskcluster:warn 2026-01-15T02:51:58.356Z] Attempts: 1
-[taskcluster:warn 2026-01-15T02:51:58.356Z] (Permanent) HTTP response code 403
-[taskcluster:warn 2026-01-15T02:51:58.356Z] HTTP/2.0 403 Forbidden
-[taskcluster:warn 2026-01-15T02:51:58.356Z] Content-Length: 778
-[taskcluster:warn 2026-01-15T02:51:58.356Z] Access-Control-Allow-Headers: X-Requested-With,Content-Type,Authorization,Accept,Origin,Cache-Control
-[taskcluster:warn 2026-01-15T02:51:58.356Z] Access-Control-Allow-Methods: OPTIONS,GET,HEAD,POST,PUT,DELETE,TRACE,CONNECT
-[taskcluster:warn 2026-01-15T02:51:58.356Z] Access-Control-Allow-Origin: *
-[taskcluster:warn 2026-01-15T02:51:58.356Z] Access-Control-Max-Age: 900
-[taskcluster:warn 2026-01-15T02:51:58.356Z] Access-Control-Request-Method: *
-[taskcluster:warn 2026-01-15T02:51:58.356Z] Cache-Control: no-store no-cache must-revalidate
-[taskcluster:warn 2026-01-15T02:51:58.356Z] Content-Security-Policy: report-uri /__cspreport__;default-src 'none';frame-ancestors 'none';
-[taskcluster:warn 2026-01-15T02:51:58.356Z] Content-Type: application/json; charset=utf-8
-[taskcluster:warn 2026-01-15T02:51:58.356Z] Date: Thu, 15 Jan 2026 02:51:58 GMT
-[taskcluster:warn 2026-01-15T02:51:58.356Z] Etag: W/"30a-0Mdqo2zTiSoS6fwvJskMOPQbTSw"
-[taskcluster:warn 2026-01-15T02:51:58.356Z] Referrer-Policy: no-referrer
-[taskcluster:warn 2026-01-15T02:51:58.356Z] X-Content-Type-Options: nosniff
-[taskcluster:warn 2026-01-15T02:51:58.356Z] X-Download-Options: noopen
-[taskcluster:warn 2026-01-15T02:51:58.356Z] X-For-Request-Id: 38530d1a-2ff1-4563-afb9-aabdf9ec5abf
-[taskcluster:warn 2026-01-15T02:51:58.356Z] X-For-Trace-Id: 47662197-7c3d-42f4-bf53-c2ee3620ce48
-[taskcluster:warn 2026-01-15T02:51:58.356Z] 
-[taskcluster:warn 2026-01-15T02:51:58.356Z] {
-[taskcluster:warn 2026-01-15T02:51:58.356Z]   "code": "InsufficientScopes",
-[taskcluster:warn 2026-01-15T02:51:58.356Z]   "message": "Client ID worker/static/aws-static/m2pro-ventura/aws-m2pro-ventura-group/i-027198ff74408f5bd does not have sufficient scopes and is missing the following scopes:\n\n```\npurge-cache:purge-requests::aws-static/m2pro-ventura\n```\n\nThis request requires the client to satisfy the following scope expression:\n\n```\npurge-cache:purge-requests::aws-static/m2pro-ventura\n```\n\n---\n\n* method:     purgeRequests\n* errorCode:  InsufficientScopes\n* statusCode: 403\n* time:       2026-01-15T02:51:58.355Z",
-[taskcluster:warn 2026-01-15T02:51:58.356Z]   "requestInfo": {
-[taskcluster:warn 2026-01-15T02:51:58.356Z]     "method": "purgeRequests",
-[taskcluster:warn 2026-01-15T02:51:58.356Z]     "params": {
-[taskcluster:warn 2026-01-15T02:51:58.356Z]       "0": "aws-static/m2pro-ventura",
-[taskcluster:warn 2026-01-15T02:51:58.356Z]       "workerPoolId": "aws-static/m2pro-ventura"
-[taskcluster:warn 2026-01-15T02:51:58.356Z]     },
-[taskcluster:warn 2026-01-15T02:51:58.356Z]     "payload": {},
-[taskcluster:warn 2026-01-15T02:51:58.356Z]     "time": "2026-01-15T02:51:58.355Z"
-[taskcluster:warn 2026-01-15T02:51:58.356Z]   }
-[taskcluster:warn 2026-01-15T02:51:58.356Z] }
-[taskcluster 2026-01-15T02:51:58.359Z] Executing command 0: /opt/miniconda3/bin/python -c '#!/usr/bin/env python3
-[taskcluster 2026-01-15T02:51:58.359Z] import base64
-[taskcluster 2026-01-15T02:51:58.359Z] import json
-[taskcluster 2026-01-15T02:51:58.359Z] import os
-[taskcluster 2026-01-15T02:51:58.359Z] import sys
-[taskcluster 2026-01-15T02:51:58.359Z] from urllib.request import urlopen
-[taskcluster 2026-01-15T02:51:58.359Z] 
-[taskcluster 2026-01-15T02:51:58.359Z] 
-[taskcluster 2026-01-15T02:51:58.359Z] def deserialize_bin(taskcluster_proxy_url: str, task_id: str) -> None:
-[taskcluster 2026-01-15T02:51:58.359Z] 
-[taskcluster 2026-01-15T02:51:58.359Z]     try:
-[taskcluster 2026-01-15T02:51:58.359Z]         with urlopen(f"{taskcluster_proxy_url}/api/queue/v1/task/{task_id}") as response:  # nosec
-[taskcluster 2026-01-15T02:51:58.359Z]             response_data = response.read()
-[taskcluster 2026-01-15T02:51:58.359Z]             data = json.loads(response_data.decode())
-[taskcluster 2026-01-15T02:51:58.359Z]             bin_files: dict = data.get("extra", {}).get("bin", {})
-[taskcluster 2026-01-15T02:51:58.359Z]             for bin_file in bin_files:
-[taskcluster 2026-01-15T02:51:58.359Z]                 encoded_content = bin_files[bin_file]
-[taskcluster 2026-01-15T02:51:58.359Z]                 try:
-[taskcluster 2026-01-15T02:51:58.359Z]                     decoded_content = base64.b64decode(encoded_content)
-[taskcluster 2026-01-15T02:51:58.359Z]                 except (ValueError, TypeError) as e:
-[taskcluster 2026-01-15T02:51:58.359Z]                     raise ValueError(f"Failed to decode base64 content for {bin_file}: {e}")
-[taskcluster 2026-01-15T02:51:58.359Z]                 with open(f"{bin_file}", "wb") as f:
-[taskcluster 2026-01-15T02:51:58.359Z]                     f.write(decoded_content)
-[taskcluster 2026-01-15T02:51:58.359Z]                     print(f"Serialized {bin_file} to worker successfully.")
-[taskcluster 2026-01-15T02:51:58.359Z]     except Exception as e:
-[taskcluster 2026-01-15T02:51:58.359Z]         raise ValueError(f"Error fetching task data: {e}") from e
-[taskcluster 2026-01-15T02:51:58.359Z] 
-[taskcluster 2026-01-15T02:51:58.359Z] 
-[taskcluster 2026-01-15T02:51:58.359Z] if __name__ == "__main__":
-[taskcluster 2026-01-15T02:51:58.359Z]     try:
-[taskcluster 2026-01-15T02:51:58.359Z]         if "TASK_ID" not in os.environ:
-[taskcluster 2026-01-15T02:51:58.359Z]             print("TASK_ID is not set", file=sys.stderr)
-[taskcluster 2026-01-15T02:51:58.359Z]             sys.exit(1)
-[taskcluster 2026-01-15T02:51:58.359Z]         if "TASKCLUSTER_PROXY_URL" not in os.environ:
-[taskcluster 2026-01-15T02:51:58.359Z]             print("TASKCLUSTER_PROXY_URL is not set", file=sys.stderr)
-[taskcluster 2026-01-15T02:51:58.359Z]             sys.exit(1)
-[taskcluster 2026-01-15T02:51:58.359Z] 
-[taskcluster 2026-01-15T02:51:58.359Z]         deserialize_bin(os.environ.get("TASKCLUSTER_PROXY_URL"), os.environ.get("TASK_ID"))
-[taskcluster 2026-01-15T02:51:58.359Z] 
-[taskcluster 2026-01-15T02:51:58.359Z]     except Exception as e:
-[taskcluster 2026-01-15T02:51:58.359Z]         print(f"Error deserializing to worker: {e}", file=sys.stderr)
-[taskcluster 2026-01-15T02:51:58.359Z]         sys.exit(1)
-[taskcluster 2026-01-15T02:51:58.359Z] '
+[taskcluster 2026-01-18T20:56:09.341Z] Worker Type (aws-static/m2pro-ventura) settings:
+[taskcluster 2026-01-18T20:56:09.341Z]   {
+[taskcluster 2026-01-18T20:56:09.341Z]     "config": {
+[taskcluster 2026-01-18T20:56:09.341Z]       "deploymentId": ""
+[taskcluster 2026-01-18T20:56:09.341Z]     },
+[taskcluster 2026-01-18T20:56:09.341Z]     "generic-worker": {
+[taskcluster 2026-01-18T20:56:09.341Z]       "engine": "insecure",
+[taskcluster 2026-01-18T20:56:09.341Z]       "go-arch": "arm64",
+[taskcluster 2026-01-18T20:56:09.341Z]       "go-os": "darwin",
+[taskcluster 2026-01-18T20:56:09.341Z]       "go-version": "go1.24.5",
+[taskcluster 2026-01-18T20:56:09.341Z]       "release": "https://github.com/taskcluster/taskcluster/releases/tag/v88.0.2",
+[taskcluster 2026-01-18T20:56:09.341Z]       "revision": "fcaf4a25fc4a3eb8543bc8605d77ce319306d7c6",
+[taskcluster 2026-01-18T20:56:09.341Z]       "source": "https://github.com/taskcluster/taskcluster/commits/fcaf4a25fc4a3eb8543bc8605d77ce319306d7c6",
+[taskcluster 2026-01-18T20:56:09.341Z]       "version": "88.0.2"
+[taskcluster 2026-01-18T20:56:09.341Z]     }
+[taskcluster 2026-01-18T20:56:09.341Z]   }
+[taskcluster 2026-01-18T20:56:09.342Z] Task ID: d3tzeg6ASEGsQfHCafnsIQ
+[taskcluster 2026-01-18T20:56:09.342Z] === Task Starting ===
+[taskcluster 2026-01-18T20:56:09.800Z] Executing command 0: /opt/miniconda3/bin/python -c '#!/usr/bin/env python3
+[taskcluster 2026-01-18T20:56:09.800Z] import base64
+[taskcluster 2026-01-18T20:56:09.800Z] import json
+[taskcluster 2026-01-18T20:56:09.800Z] import os
+[taskcluster 2026-01-18T20:56:09.800Z] import sys
+[taskcluster 2026-01-18T20:56:09.800Z] from urllib.request import urlopen
+[taskcluster 2026-01-18T20:56:09.800Z] 
+[taskcluster 2026-01-18T20:56:09.800Z] 
+[taskcluster 2026-01-18T20:56:09.800Z] def deserialize_bin(taskcluster_proxy_url: str, task_id: str) -> None:
+[taskcluster 2026-01-18T20:56:09.800Z] 
+[taskcluster 2026-01-18T20:56:09.800Z]     try:
+[taskcluster 2026-01-18T20:56:09.800Z]         with urlopen(f"{taskcluster_proxy_url}/api/queue/v1/task/{task_id}") as response:  # nosec
+[taskcluster 2026-01-18T20:56:09.800Z]             response_data = response.read()
+[taskcluster 2026-01-18T20:56:09.800Z]             data = json.loads(response_data.decode())
+[taskcluster 2026-01-18T20:56:09.800Z]             bin_files: dict = data.get("extra", {}).get("bin", {})
+[taskcluster 2026-01-18T20:56:09.800Z]             for bin_file in bin_files:
+[taskcluster 2026-01-18T20:56:09.800Z]                 encoded_content = bin_files[bin_file]
+[taskcluster 2026-01-18T20:56:09.800Z]                 try:
+[taskcluster 2026-01-18T20:56:09.800Z]                     decoded_content = base64.b64decode(encoded_content)
+[taskcluster 2026-01-18T20:56:09.800Z]                 except (ValueError, TypeError) as e:
+[taskcluster 2026-01-18T20:56:09.800Z]                     raise ValueError(f"Failed to decode base64 content for {bin_file}: {e}")
+[taskcluster 2026-01-18T20:56:09.800Z]                 with open(f"{bin_file}", "wb") as f:
+[taskcluster 2026-01-18T20:56:09.800Z]                     f.write(decoded_content)
+[taskcluster 2026-01-18T20:56:09.800Z]                     print(f"Serialized {bin_file} to worker successfully.")
+[taskcluster 2026-01-18T20:56:09.800Z]     except Exception as e:
+[taskcluster 2026-01-18T20:56:09.800Z]         raise ValueError(f"Error fetching task data: {e}") from e
+[taskcluster 2026-01-18T20:56:09.800Z] 
+[taskcluster 2026-01-18T20:56:09.800Z] 
+[taskcluster 2026-01-18T20:56:09.800Z] if __name__ == "__main__":
+[taskcluster 2026-01-18T20:56:09.800Z]     try:
+[taskcluster 2026-01-18T20:56:09.800Z]         if "TASK_ID" not in os.environ:
+[taskcluster 2026-01-18T20:56:09.800Z]             print("TASK_ID is not set", file=sys.stderr)
+[taskcluster 2026-01-18T20:56:09.800Z]             sys.exit(1)
+[taskcluster 2026-01-18T20:56:09.800Z]         if "TASKCLUSTER_PROXY_URL" not in os.environ:
+[taskcluster 2026-01-18T20:56:09.800Z]             print("TASKCLUSTER_PROXY_URL is not set", file=sys.stderr)
+[taskcluster 2026-01-18T20:56:09.800Z]             sys.exit(1)
+[taskcluster 2026-01-18T20:56:09.800Z] 
+[taskcluster 2026-01-18T20:56:09.800Z]         deserialize_bin(os.environ.get("TASKCLUSTER_PROXY_URL"), os.environ.get("TASK_ID"))
+[taskcluster 2026-01-18T20:56:09.800Z] 
+[taskcluster 2026-01-18T20:56:09.800Z]     except Exception as e:
+[taskcluster 2026-01-18T20:56:09.800Z]         print(f"Error deserializing to worker: {e}", file=sys.stderr)
+[taskcluster 2026-01-18T20:56:09.800Z]         sys.exit(1)
+[taskcluster 2026-01-18T20:56:09.800Z] '
 Serialized build.py to worker successfully.
 Serialized shared_utils.py to worker successfully.
 Serialized secret_manager.py to worker successfully.
 Serialized dump_job_params.py to worker successfully.
 Serialized download_dependencies.py to worker successfully.
 Serialized download_conda_build_config.py to worker successfully.
-[taskcluster 2026-01-15T02:51:58.503Z]                        Exit Code: 0
-[taskcluster 2026-01-15T02:51:58.503Z]                        User Time: 74.782ms
-[taskcluster 2026-01-15T02:51:58.503Z]                      Kernel Time: 20.689ms
-[taskcluster 2026-01-15T02:51:58.503Z]                        Wall Time: 142.718ms
-[taskcluster 2026-01-15T02:51:58.503Z]                           Result: SUCCEEDED
-[taskcluster 2026-01-15T02:51:58.503Z] Executing command 1: true 'shared_utils.py'
-[taskcluster 2026-01-15T02:51:58.506Z]                        Exit Code: 0
-[taskcluster 2026-01-15T02:51:58.506Z]                        User Time: 341µs
-[taskcluster 2026-01-15T02:51:58.506Z]                      Kernel Time: 844µs
-[taskcluster 2026-01-15T02:51:58.506Z]                        Wall Time: 2.166ms
-[taskcluster 2026-01-15T02:51:58.506Z]                           Result: SUCCEEDED
-[taskcluster 2026-01-15T02:51:58.506Z] Executing command 2: true 'secret_manager.py'
-[taskcluster 2026-01-15T02:51:58.507Z]                        Exit Code: 0
-[taskcluster 2026-01-15T02:51:58.507Z]                        User Time: 231µs
-[taskcluster 2026-01-15T02:51:58.507Z]                      Kernel Time: 625µs
-[taskcluster 2026-01-15T02:51:58.507Z]                        Wall Time: 1.655ms
-[taskcluster 2026-01-15T02:51:58.507Z]                           Result: SUCCEEDED
-[taskcluster 2026-01-15T02:51:58.508Z] Executing command 3: /opt/miniconda3/bin/python 'dump_job_params.py'
+[taskcluster 2026-01-18T20:56:09.923Z]                        Exit Code: 0
+[taskcluster 2026-01-18T20:56:09.923Z]                        User Time: 71.179ms
+[taskcluster 2026-01-18T20:56:09.923Z]                      Kernel Time: 19.682ms
+[taskcluster 2026-01-18T20:56:09.923Z]                        Wall Time: 120.624ms
+[taskcluster 2026-01-18T20:56:09.923Z]                           Result: SUCCEEDED
+[taskcluster 2026-01-18T20:56:09.923Z] Executing command 1: true 'shared_utils.py'
+[taskcluster 2026-01-18T20:56:09.926Z]                        Exit Code: 0
+[taskcluster 2026-01-18T20:56:09.926Z]                        User Time: 311µs
+[taskcluster 2026-01-18T20:56:09.926Z]                      Kernel Time: 799µs
+[taskcluster 2026-01-18T20:56:09.926Z]                        Wall Time: 2.638ms
+[taskcluster 2026-01-18T20:56:09.926Z]                           Result: SUCCEEDED
+[taskcluster 2026-01-18T20:56:09.926Z] Executing command 2: true 'secret_manager.py'
+[taskcluster 2026-01-18T20:56:09.927Z]                        Exit Code: 0
+[taskcluster 2026-01-18T20:56:09.927Z]                        User Time: 218µs
+[taskcluster 2026-01-18T20:56:09.927Z]                      Kernel Time: 568µs
+[taskcluster 2026-01-18T20:56:09.927Z]                        Wall Time: 1.481ms
+[taskcluster 2026-01-18T20:56:09.927Z]                           Result: SUCCEEDED
+[taskcluster 2026-01-18T20:56:09.928Z] Executing command 3: /opt/miniconda3/bin/python 'dump_job_params.py'
 {
   "provisionerId": "aws-static",
   "workerType": "m2pro-ventura",
   "taskQueueId": "aws-static/m2pro-ventura",
   "schedulerId": "package-build-platform",
   "projectId": "none",
-  "taskGroupId": "CKmK_W1GTCC0m-_jych7Hw",
+  "taskGroupId": "RJJFgIdrRlmgc_yCixqAMQ",
   "dependencies": [
-    "CKmK_W1GTCC0m-_jych7Hw"
+    "RJJFgIdrRlmgc_yCixqAMQ"
   ],
   "requires": "all-completed",
   "routes": [
@@ -152,9 +99,9 @@ Serialized download_conda_build_config.py to worker successfully.
   ],
   "priority": "lowest",
   "retries": 5,
-  "created": "2026-01-15T02:51:55.694Z",
-  "deadline": "2026-01-18T02:51:55.694Z",
-  "expires": "2027-01-18T02:51:55.694Z",
+  "created": "2026-01-18T20:56:07.395Z",
+  "deadline": "2026-01-21T20:56:07.395Z",
+  "expires": "2027-01-21T20:56:07.395Z",
   "scopes": [
     "queue:*",
     "secrets:get:GH_ACCESS_TOKEN"
@@ -165,9 +112,9 @@ Serialized download_conda_build_config.py to worker successfully.
       "RECIPE_DIR": "recipe",
       "SRC_CHANNELS": "https://staging.continuum.io/pbp/llvm-21.1.8-stage0-build-0,defaults",
       "BUILD_OPTIONS": "--suppress-variables",
-      "FEEDSTOCK_REF": "00685da69d96e596bb57d994d18ab4c369c99a11",
+      "FEEDSTOCK_REF": "60c33ee8945422af31eff989fb0d27e64eef6e38",
       "FEEDSTOCK_URL": "https://github.com/AnacondaRecipes/clang-compiler-activation-feedstock",
-      "PYTHON_VERSION": "3.12",
+      "PYTHON_VERSION": "3.13",
       "TREAT_AS_PRIVATE": "false",
       "RUN_FROM_DEPENDENCIES": "false"
     },
@@ -215,10 +162,10 @@ Serialized download_conda_build_config.py to worker successfully.
     "maxRunTime": 7200
   },
   "metadata": {
-    "name": "build-clang-compiler-activation-feedstock-osx-arm64_py3.12_3d125ad88d49024e",
+    "name": "build-clang-compiler-activation-feedstock-osx-arm64_py3.13_0895567d407a3304",
     "owner": "xkong-anaconda",
     "source": "http://taskcluster/tasks/create",
-    "description": "Build task for clang-compiler-activation-feedstock @ 00685da (00685da69d96e596bb57d994d18ab4c369c99a11) osx-arm64 3.12 CBUILD=arm64-apple-darwin20.0.0 CONDA_BUILD_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk FINAL_PYTHON_SYSCONFIGDATA_NAME=_sysconfigdata_arm64_apple_darwin20_0_0 c_stdlib=macosx_deployment_target c_stdlib_version=12.1 channel_targets=defaults cross_target_platform=osx-arm64 macos_machine=arm64-apple-darwin20.0.0 meson_cpu_family=aarch64 target_platform=osx-arm64 uname_kernel_release=20.0.0 uname_machine=arm64 2026-01-15 02:51:53"
+    "description": "Build task for clang-compiler-activation-feedstock @ 60c33ee (60c33ee8945422af31eff989fb0d27e64eef6e38) osx-arm64 3.13 CBUILD=arm64-apple-darwin20.0.0 CONDA_BUILD_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk FINAL_PYTHON_SYSCONFIGDATA_NAME=_sysconfigdata_arm64_apple_darwin20_0_0 c_stdlib=macosx_deployment_target c_stdlib_version=12.1 channel_targets=defaults cross_target_platform=osx-arm64 macos_machine=arm64-apple-darwin20.0.0 meson_cpu_family=aarch64 target_platform=osx-arm64 uname_kernel_release=20.0.0 uname_machine=arm64 2026-01-18 20:56:05"
   },
   "tags": {},
   "extra": {
@@ -233,7 +180,7 @@ Serialized download_conda_build_config.py to worker successfully.
     "files": {
       "conda_build_config": {
         "CBUILD": "arm64-apple-darwin20.0.0",
-        "python": "3.12",
+        "python": "3.13",
         "c_stdlib": "macosx_deployment_target",
         "platform": "osx-arm64",
         "macos_machine": "arm64-apple-darwin20.0.0",
@@ -250,35 +197,35 @@ Serialized download_conda_build_config.py to worker successfully.
     }
   }
 }
-[taskcluster 2026-01-15T02:51:58.618Z]                        Exit Code: 0
-[taskcluster 2026-01-15T02:51:58.618Z]                        User Time: 74.433ms
-[taskcluster 2026-01-15T02:51:58.618Z]                      Kernel Time: 12.658ms
-[taskcluster 2026-01-15T02:51:58.618Z]                        Wall Time: 110.17ms
-[taskcluster 2026-01-15T02:51:58.618Z]                           Result: SUCCEEDED
-[taskcluster 2026-01-15T02:51:58.618Z] Executing command 4: /opt/miniconda3/bin/python 'download_conda_build_config.py'
+[taskcluster 2026-01-18T20:56:10.033Z]                        Exit Code: 0
+[taskcluster 2026-01-18T20:56:10.033Z]                        User Time: 73.181ms
+[taskcluster 2026-01-18T20:56:10.033Z]                      Kernel Time: 12.344ms
+[taskcluster 2026-01-18T20:56:10.033Z]                        Wall Time: 105.092ms
+[taskcluster 2026-01-18T20:56:10.033Z]                           Result: SUCCEEDED
+[taskcluster 2026-01-18T20:56:10.033Z] Executing command 4: /opt/miniconda3/bin/python 'download_conda_build_config.py'
 conda_build_config_pbp_generated.yaml downloaded successfully.
-[taskcluster 2026-01-15T02:51:58.725Z]                        Exit Code: 0
-[taskcluster 2026-01-15T02:51:58.725Z]                        User Time: 78.757ms
-[taskcluster 2026-01-15T02:51:58.725Z]                      Kernel Time: 13.145ms
-[taskcluster 2026-01-15T02:51:58.725Z]                        Wall Time: 106.65ms
-[taskcluster 2026-01-15T02:51:58.725Z]                           Result: SUCCEEDED
-[taskcluster 2026-01-15T02:51:58.725Z] Executing command 5: /opt/miniconda3/bin/python 'download_dependencies.py'
+[taskcluster 2026-01-18T20:56:10.138Z]                        Exit Code: 0
+[taskcluster 2026-01-18T20:56:10.138Z]                        User Time: 79.131ms
+[taskcluster 2026-01-18T20:56:10.138Z]                      Kernel Time: 13.098ms
+[taskcluster 2026-01-18T20:56:10.138Z]                        Wall Time: 105.328ms
+[taskcluster 2026-01-18T20:56:10.138Z]                           Result: SUCCEEDED
+[taskcluster 2026-01-18T20:56:10.138Z] Executing command 5: /opt/miniconda3/bin/python 'download_dependencies.py'
 Will remove 1 package cache(s).
-[taskcluster 2026-01-15T02:51:59.649Z]                        Exit Code: 0
-[taskcluster 2026-01-15T02:51:59.649Z]                        User Time: 313.033ms
-[taskcluster 2026-01-15T02:51:59.649Z]                      Kernel Time: 365.12ms
-[taskcluster 2026-01-15T02:51:59.649Z]                        Wall Time: 924.562ms
-[taskcluster 2026-01-15T02:51:59.649Z]  Average Available System Memory: 25.53 GiB
-[taskcluster 2026-01-15T02:51:59.649Z]       Average System Memory Used: 6.47 GiB
-[taskcluster 2026-01-15T02:51:59.649Z]          Peak System Memory Used: 6.47 GiB
-[taskcluster 2026-01-15T02:51:59.649Z]              Total System Memory: 32.00 GiB
-[taskcluster 2026-01-15T02:51:59.649Z]                           Result: SUCCEEDED
-[taskcluster 2026-01-15T02:51:59.650Z] Executing command 6: /opt/miniconda3/bin/python 'build.py'
+[taskcluster 2026-01-18T20:56:11.733Z]                        Exit Code: 0
+[taskcluster 2026-01-18T20:56:11.733Z]                        User Time: 311.348ms
+[taskcluster 2026-01-18T20:56:11.733Z]                      Kernel Time: 918.659ms
+[taskcluster 2026-01-18T20:56:11.733Z]                        Wall Time: 1.59464s
+[taskcluster 2026-01-18T20:56:11.733Z]  Average Available System Memory: 27.60 GiB
+[taskcluster 2026-01-18T20:56:11.733Z]       Average System Memory Used: 4.40 GiB
+[taskcluster 2026-01-18T20:56:11.733Z]          Peak System Memory Used: 4.40 GiB
+[taskcluster 2026-01-18T20:56:11.733Z]              Total System Memory: 32.00 GiB
+[taskcluster 2026-01-18T20:56:11.733Z]                           Result: SUCCEEDED
+[taskcluster 2026-01-18T20:56:11.733Z] Executing command 6: /opt/miniconda3/bin/python 'build.py'
 Debug:Cloning feedstock from https://github.com/AnacondaRecipes/clang-compiler-activation-feedstock...
 Cloning into 'clang-compiler-activation-feedstock'...
 From https://github.com/AnacondaRecipes/clang-compiler-activation-feedstock
- * branch            00685da69d96e596bb57d994d18ab4c369c99a11 -> FETCH_HEAD
-Note: switching to '00685da69d96e596bb57d994d18ab4c369c99a11'.
+ * branch            60c33ee8945422af31eff989fb0d27e64eef6e38 -> FETCH_HEAD
+Note: switching to '60c33ee8945422af31eff989fb0d27e64eef6e38'.
 
 You are in 'detached HEAD' state. You can look around, make experimental
 changes and commit them, and you can discard any commits you make in this
@@ -295,7 +242,7 @@ Or undo this operation with:
 
 Turn off this advice by setting config variable advice.detachedHead to false
 
-HEAD is now at 00685da Use LLVM 20 era cctools/ld64 for Stage 1 build
+HEAD is now at 60c33ee Stage 1 rebuild: Fix clang_bootstrap to include llvm-tools (dsymutil)
 Renormalizing line endings in clang-compiler-activation-feedstock...
 Found conda config sources: ['/opt/miniconda3/.condarc']
 Debug:Found home directory: /Users/ec2-user
@@ -618,11 +565,11 @@ Executing transaction: ...working... done
 Debug:Found home directory: /Users/ec2-user
 Debug:Found home directory: /Users/ec2-user
 Using the following build time options: ['--suppress-variables']
-Executing command: /opt/miniconda3/bin/conda run --live-stream --prefix /Users/ec2-user/bld conda build clang-compiler-activation-feedstock/recipe --cache-dir /Users/ec2-user/tasks/task_176842840529834/src_cache --output-folder public --croot /Users/ec2-user/croot -m ./conda_build_config_pbp_generated.yaml --clobber-file ./conda_build_config_pbp_generated.yaml --override-channels --no-test --no-verify -c pbp_src_multichannel --suppress-variables
+Executing command: /opt/miniconda3/bin/conda run --live-stream --prefix /Users/ec2-user/bld conda build clang-compiler-activation-feedstock/recipe --cache-dir /Users/ec2-user/tasks/task_176876191987996/src_cache --output-folder public --croot /Users/ec2-user/croot -m ./conda_build_config_pbp_generated.yaml --clobber-file ./conda_build_config_pbp_generated.yaml --override-channels --no-test --no-verify -c pbp_src_multichannel --suppress-variables
 WARNING: No numpy version specified in conda_build_config.yaml.  Falling back to default numpy value of 1.26
 Adding in variants from internal_defaults
-Adding in variants from /Users/ec2-user/tasks/task_176842840529834/clang-compiler-activation-feedstock/recipe/conda_build_config.yaml
-Adding in variants from /Users/ec2-user/tasks/task_176842840529834/conda_build_config_pbp_generated.yaml
+Adding in variants from /Users/ec2-user/tasks/task_176876191987996/clang-compiler-activation-feedstock/recipe/conda_build_config.yaml
+Adding in variants from /Users/ec2-user/tasks/task_176876191987996/conda_build_config_pbp_generated.yaml
 Attempting to finalize metadata for clang_impl_osx-arm64
 WARNING conda.gateways.repodata.jlap.fetch:request_url_jlap_state(322): Could not decompress https://staging.continuum.io/pbp/llvm-21.1.8-stage0-build-0/osx-arm64/repodata.json.zst as zstd. Fall back to .json. (zstd decompress error: Unknown frame descriptor)
 WARNING conda.gateways.repodata.jlap.fetch:request_url_jlap_state(322): Could not decompress https://staging.continuum.io/pbp/llvm-21.1.8-stage0-build-0/noarch/repodata.json.zst as zstd. Fall back to .json. (zstd decompress error: Unknown frame descriptor)
@@ -632,10 +579,10 @@ Reloading output folder: ...working... done
 Getting pinned dependencies: ...working... done
 Reloading output folder: ...working... done
 Getting pinned dependencies: ...working... done
-WARNING: Adding .* to spec 'cctools 1021.4' to ensure satisfiability.  Please consider putting {{{{ var_name }}}}.* or some relational operator (>/</>=/<=) on this spec in meta.yaml, or if req is also a build req, using {{{{ pin_compatible() }}}} jinja2 function instead.  See https://conda.io/docs/user-guide/tasks/build-packages/variants.html#pinning-at-the-variant-level
-WARNING: Adding .* to spec 'llvm-tools 21' to ensure satisfiability.  Please consider putting {{{{ var_name }}}}.* or some relational operator (>/</>=/<=) on this spec in meta.yaml, or if req is also a build req, using {{{{ pin_compatible() }}}} jinja2 function instead.  See https://conda.io/docs/user-guide/tasks/build-packages/variants.html#pinning-at-the-variant-level
 WARNING: Adding .* to spec 'clang 21' to ensure satisfiability.  Please consider putting {{{{ var_name }}}}.* or some relational operator (>/</>=/<=) on this spec in meta.yaml, or if req is also a build req, using {{{{ pin_compatible() }}}} jinja2 function instead.  See https://conda.io/docs/user-guide/tasks/build-packages/variants.html#pinning-at-the-variant-level
-WARNING: Adding .* to spec 'ld64 954.16' to ensure satisfiability.  Please consider putting {{{{ var_name }}}}.* or some relational operator (>/</>=/<=) on this spec in meta.yaml, or if req is also a build req, using {{{{ pin_compatible() }}}} jinja2 function instead.  See https://conda.io/docs/user-guide/tasks/build-packages/variants.html#pinning-at-the-variant-level
+WARNING: Adding .* to spec 'llvm-tools 21' to ensure satisfiability.  Please consider putting {{{{ var_name }}}}.* or some relational operator (>/</>=/<=) on this spec in meta.yaml, or if req is also a build req, using {{{{ pin_compatible() }}}} jinja2 function instead.  See https://conda.io/docs/user-guide/tasks/build-packages/variants.html#pinning-at-the-variant-level
+WARNING: Adding .* to spec 'cctools 1024.3' to ensure satisfiability.  Please consider putting {{{{ var_name }}}}.* or some relational operator (>/</>=/<=) on this spec in meta.yaml, or if req is also a build req, using {{{{ pin_compatible() }}}} jinja2 function instead.  See https://conda.io/docs/user-guide/tasks/build-packages/variants.html#pinning-at-the-variant-level
+WARNING: Adding .* to spec 'ld64 955.13' to ensure satisfiability.  Please consider putting {{{{ var_name }}}}.* or some relational operator (>/</>=/<=) on this spec in meta.yaml, or if req is also a build req, using {{{{ pin_compatible() }}}} jinja2 function instead.  See https://conda.io/docs/user-guide/tasks/build-packages/variants.html#pinning-at-the-variant-level
 Attempting to finalize metadata for clang_osx-arm64
 Attempting to finalize metadata for clangxx_impl_osx-arm64
 Reloading output folder: ...working... done
@@ -647,16 +594,20 @@ Getting pinned dependencies: ...working... done
 WARNING: Adding .* to spec 'clangxx 21' to ensure satisfiability.  Please consider putting {{{{ var_name }}}}.* or some relational operator (>/</>=/<=) on this spec in meta.yaml, or if req is also a build req, using {{{{ pin_compatible() }}}} jinja2 function instead.  See https://conda.io/docs/user-guide/tasks/build-packages/variants.html#pinning-at-the-variant-level
 Attempting to finalize metadata for clangxx_osx-arm64
 Attempting to finalize metadata for clang_bootstrap_osx-arm64
+Reloading output folder: ...working... done
+Getting pinned dependencies: ...working... done
+Reloading output folder: ...working... done
+Getting pinned dependencies: ...working... done
 BUILD START: ['clang_impl_osx-arm64-21.1.8-h1ae22af_0.conda', 'clang_osx-arm64-21.1.8-hf3c1794_0.conda', 'clangxx_impl_osx-arm64-21.1.8-h4363b87_0.conda', 'clangxx_osx-arm64-21.1.8-hf3c1794_0.conda', 'clang_bootstrap_osx-arm64-21.1.8-h417ed56_0.conda']
 Reloading output folder: ...working... done
 Getting pinned dependencies: ...working... failed
-WARNING: failed to get package records, retrying.  exception was: Unsatisfiable dependencies for platform osx-arm64: {MatchSpec("clangdev==21.1.8=default_h6b9555d_0"), MatchSpec("clang==21.1.8=h71b10da_0")}
+WARNING: failed to get package records, retrying.  exception was: Unsatisfiable dependencies for platform osx-arm64: {MatchSpec("clang==21.1.8=h71b10da_0"), MatchSpec("clangdev==21.1.8=default_h6b9555d_0")}
 Encountered problems while solving:
   - package clangdev-21.1.8-default_h6b9555d_0 requires clang 21.1.8 h71b10da_0, but none of the providers can be installed
 
 Could not solve for environment specs
 The following packages are incompatible
-├─ cctools =1021.4 * is installable and it requires
+├─ cctools =1024.3 * is installable and it requires
 │  └─ clang =20 *, which can be installed;
 └─ clangdev =21 * is not installable because it requires
    └─ clang ==21.1.8 h71b10da_0, which conflicts with any installable versions previously reported.
@@ -668,13 +619,13 @@ Reloading output folder: ...working... done
 Getting pinned dependencies: ...working... failed
 ERROR: Failed to get package records, max retries exceeded.
 
-ExplainedDependencyNeedsBuildingError: Unsatisfiable dependencies for platform osx-arm64: {MatchSpec("clangdev==21.1.8=default_h6b9555d_0"), MatchSpec("clang==21.1.8=h71b10da_0")}
+ExplainedDependencyNeedsBuildingError: Unsatisfiable dependencies for platform osx-arm64: {MatchSpec("clang==21.1.8=h71b10da_0"), MatchSpec("clangdev==21.1.8=default_h6b9555d_0")}
 Encountered problems while solving:
   - package clangdev-21.1.8-default_h6b9555d_0 requires clang 21.1.8 h71b10da_0, but none of the providers can be installed
 
 Could not solve for environment specs
 The following packages are incompatible
-├─ cctools =1021.4 * is installable and it requires
+├─ cctools =1024.3 * is installable and it requires
 │  └─ clang =20 *, which can be installed;
 └─ clangdev =21 * is not installable because it requires
    └─ clang ==21.1.8 h71b10da_0, which conflicts with any installable versions previously reported.
@@ -692,30 +643,30 @@ source activate  /Users/ec2-user/croot/_test_env_placehold_placehold_placehold_p
 source activate  /Users/ec2-user/croot/_build_env 
 
 
-ERROR conda.cli.main_run:execute(125): `conda run conda build clang-compiler-activation-feedstock/recipe --cache-dir /Users/ec2-user/tasks/task_176842840529834/src_cache --output-folder public --croot /Users/ec2-user/croot -m ./conda_build_config_pbp_generated.yaml --clobber-file ./conda_build_config_pbp_generated.yaml --override-channels --no-test --no-verify -c pbp_src_multichannel --suppress-variables` failed. (See above for error)
+ERROR conda.cli.main_run:execute(125): `conda run conda build clang-compiler-activation-feedstock/recipe --cache-dir /Users/ec2-user/tasks/task_176876191987996/src_cache --output-folder public --croot /Users/ec2-user/croot -m ./conda_build_config_pbp_generated.yaml --clobber-file ./conda_build_config_pbp_generated.yaml --override-channels --no-test --no-verify -c pbp_src_multichannel --suppress-variables` failed. (See above for error)
 Error: Error running conda build --no-test. See above for error.
-[taskcluster 2026-01-15T02:52:32.796Z]                        Exit Code: 1
-[taskcluster 2026-01-15T02:52:32.796Z]                        User Time: 13.800825s
-[taskcluster 2026-01-15T02:52:32.796Z]                      Kernel Time: 13.924008s
-[taskcluster 2026-01-15T02:52:32.796Z]                        Wall Time: 33.146143s
-[taskcluster 2026-01-15T02:52:32.796Z]  Average Available System Memory: 25.22 GiB
-[taskcluster 2026-01-15T02:52:32.796Z]       Average System Memory Used: 6.78 GiB
-[taskcluster 2026-01-15T02:52:32.796Z]          Peak System Memory Used: 7.08 GiB
-[taskcluster 2026-01-15T02:52:32.796Z]              Total System Memory: 32.00 GiB
-[taskcluster 2026-01-15T02:52:32.796Z]                           Result: FAILED
-[taskcluster 2026-01-15T02:52:32.796Z] === Task Finished ===
-[taskcluster 2026-01-15T02:52:32.796Z] Task Duration: 34.437392s
-[taskcluster 2026-01-15T02:52:32.834Z] Uploading artifact public/channeldata.json from file /Users/ec2-user/tasks/task_176842840529834/public/channeldata.json with content encoding "identity", mime type "application/json" and expiry 2027-01-18T02:51:55.694Z
-[taskcluster 2026-01-15T02:52:32.881Z] Uploading artifact public/osx-arm64/current_repodata.json from file /Users/ec2-user/tasks/task_176842840529834/public/osx-arm64/current_repodata.json with content encoding "identity", mime type "application/json" and expiry 2027-01-18T02:51:55.694Z
-[taskcluster 2026-01-15T02:52:32.888Z] Uploading artifact public/index.html from file /Users/ec2-user/tasks/task_176842840529834/public/index.html with content encoding "identity", mime type "text/html; charset=utf-8" and expiry 2027-01-18T02:51:55.694Z
-[taskcluster 2026-01-15T02:52:32.893Z] Uploading artifact public/osx-arm64/repodata.json from file /Users/ec2-user/tasks/task_176842840529834/public/osx-arm64/repodata.json with content encoding "identity", mime type "application/json" and expiry 2027-01-18T02:51:55.694Z
-[taskcluster 2026-01-15T02:52:32.919Z] Uploading artifact public/noarch/index.html from file /Users/ec2-user/tasks/task_176842840529834/public/noarch/index.html with content encoding "identity", mime type "text/html; charset=utf-8" and expiry 2027-01-18T02:51:55.694Z
-[taskcluster 2026-01-15T02:52:33.457Z] Uploading artifact public/noarch/.cache/cache.db from file /Users/ec2-user/tasks/task_176842840529834/public/noarch/.cache/cache.db with content encoding "identity", mime type "application/octet-stream" and expiry 2027-01-18T02:51:55.694Z
-[taskcluster 2026-01-15T02:52:33.498Z] Uploading artifact public/osx-arm64/repodata_from_packages.json from file /Users/ec2-user/tasks/task_176842840529834/public/osx-arm64/repodata_from_packages.json with content encoding "identity", mime type "application/json" and expiry 2027-01-18T02:51:55.694Z
-[taskcluster 2026-01-15T02:52:33.529Z] Uploading artifact public/noarch/repodata.json from file /Users/ec2-user/tasks/task_176842840529834/public/noarch/repodata.json with content encoding "identity", mime type "application/json" and expiry 2027-01-18T02:51:55.694Z
-[taskcluster 2026-01-15T02:52:33.533Z] Uploading artifact public/osx-arm64/.cache/cache.db from file /Users/ec2-user/tasks/task_176842840529834/public/osx-arm64/.cache/cache.db with content encoding "identity", mime type "application/octet-stream" and expiry 2027-01-18T02:51:55.694Z
-[taskcluster 2026-01-15T02:52:33.536Z] Uploading artifact public/noarch/current_repodata.json from file /Users/ec2-user/tasks/task_176842840529834/public/noarch/current_repodata.json with content encoding "identity", mime type "application/json" and expiry 2027-01-18T02:51:55.694Z
-[taskcluster 2026-01-15T02:52:33.540Z] Uploading artifact public/osx-arm64/index.html from file /Users/ec2-user/tasks/task_176842840529834/public/osx-arm64/index.html with content encoding "identity", mime type "text/html; charset=utf-8" and expiry 2027-01-18T02:51:55.694Z
-[taskcluster 2026-01-15T02:52:33.544Z] Uploading artifact public/noarch/repodata_from_packages.json from file /Users/ec2-user/tasks/task_176842840529834/public/noarch/repodata_from_packages.json with content encoding "identity", mime type "application/json" and expiry 2027-01-18T02:51:55.694Z
-[taskcluster 2026-01-15T02:52:33.685Z] Uploading link artifact public/logs/live.log to artifact public/logs/live_backing.log with expiry 2027-01-18T02:51:55.694Z
+[taskcluster 2026-01-18T20:56:42.378Z]                        Exit Code: 1
+[taskcluster 2026-01-18T20:56:42.378Z]                        User Time: 13.881356s
+[taskcluster 2026-01-18T20:56:42.378Z]                      Kernel Time: 12.122932s
+[taskcluster 2026-01-18T20:56:42.378Z]                        Wall Time: 30.644339s
+[taskcluster 2026-01-18T20:56:42.378Z]  Average Available System Memory: 27.27 GiB
+[taskcluster 2026-01-18T20:56:42.378Z]       Average System Memory Used: 4.73 GiB
+[taskcluster 2026-01-18T20:56:42.378Z]          Peak System Memory Used: 5.06 GiB
+[taskcluster 2026-01-18T20:56:42.378Z]              Total System Memory: 32.00 GiB
+[taskcluster 2026-01-18T20:56:42.378Z]                           Result: FAILED
+[taskcluster 2026-01-18T20:56:42.378Z] === Task Finished ===
+[taskcluster 2026-01-18T20:56:42.378Z] Task Duration: 32.577933s
+[taskcluster 2026-01-18T20:56:42.413Z] Uploading artifact public/osx-arm64/current_repodata.json from file /Users/ec2-user/tasks/task_176876191987996/public/osx-arm64/current_repodata.json with content encoding "identity", mime type "application/json" and expiry 2027-01-21T20:56:07.395Z
+[taskcluster 2026-01-18T20:56:42.420Z] Uploading artifact public/osx-arm64/repodata_from_packages.json from file /Users/ec2-user/tasks/task_176876191987996/public/osx-arm64/repodata_from_packages.json with content encoding "identity", mime type "application/json" and expiry 2027-01-21T20:56:07.395Z
+[taskcluster 2026-01-18T20:56:42.472Z] Uploading artifact public/osx-arm64/repodata.json from file /Users/ec2-user/tasks/task_176876191987996/public/osx-arm64/repodata.json with content encoding "identity", mime type "application/json" and expiry 2027-01-21T20:56:07.395Z
+[taskcluster 2026-01-18T20:56:42.477Z] Uploading artifact public/osx-arm64/.cache/cache.db from file /Users/ec2-user/tasks/task_176876191987996/public/osx-arm64/.cache/cache.db with content encoding "identity", mime type "application/octet-stream" and expiry 2027-01-21T20:56:07.395Z
+[taskcluster 2026-01-18T20:56:42.482Z] Uploading artifact public/noarch/index.html from file /Users/ec2-user/tasks/task_176876191987996/public/noarch/index.html with content encoding "identity", mime type "text/html; charset=utf-8" and expiry 2027-01-21T20:56:07.395Z
+[taskcluster 2026-01-18T20:56:42.482Z] Uploading artifact public/noarch/.cache/cache.db from file /Users/ec2-user/tasks/task_176876191987996/public/noarch/.cache/cache.db with content encoding "identity", mime type "application/octet-stream" and expiry 2027-01-21T20:56:07.395Z
+[taskcluster 2026-01-18T20:56:42.483Z] Uploading artifact public/noarch/current_repodata.json from file /Users/ec2-user/tasks/task_176876191987996/public/noarch/current_repodata.json with content encoding "identity", mime type "application/json" and expiry 2027-01-21T20:56:07.395Z
+[taskcluster 2026-01-18T20:56:42.483Z] Uploading artifact public/osx-arm64/index.html from file /Users/ec2-user/tasks/task_176876191987996/public/osx-arm64/index.html with content encoding "identity", mime type "text/html; charset=utf-8" and expiry 2027-01-21T20:56:07.395Z
+[taskcluster 2026-01-18T20:56:42.490Z] Uploading artifact public/noarch/repodata.json from file /Users/ec2-user/tasks/task_176876191987996/public/noarch/repodata.json with content encoding "identity", mime type "application/json" and expiry 2027-01-21T20:56:07.395Z
+[taskcluster 2026-01-18T20:56:42.490Z] Uploading artifact public/channeldata.json from file /Users/ec2-user/tasks/task_176876191987996/public/channeldata.json with content encoding "identity", mime type "application/json" and expiry 2027-01-21T20:56:07.395Z
+[taskcluster 2026-01-18T20:56:42.504Z] Uploading artifact public/index.html from file /Users/ec2-user/tasks/task_176876191987996/public/index.html with content encoding "identity", mime type "text/html; charset=utf-8" and expiry 2027-01-21T20:56:07.395Z
+[taskcluster 2026-01-18T20:56:42.506Z] Uploading artifact public/noarch/repodata_from_packages.json from file /Users/ec2-user/tasks/task_176876191987996/public/noarch/repodata_from_packages.json with content encoding "identity", mime type "application/json" and expiry 2027-01-21T20:56:07.395Z
+[taskcluster 2026-01-18T20:56:42.606Z] Uploading link artifact public/logs/live.log to artifact public/logs/live_backing.log with expiry 2027-01-21T20:56:07.395Z
 [taskcluster:error] exit status 1
