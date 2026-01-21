@@ -3,7 +3,7 @@
 {% endif %}
 {% set major_ver = version.split(".")[0] %}
 
-{% set build_number = 1 %}  # Stage 2: with cctools/ld64 re-enabled
+{% set build_number = 1 %}
 
 {% set last_major = "21" %}
 
@@ -30,7 +30,7 @@ build:
 requirements:
   build:
     - {{ stdlib('c') }}
-    - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
+    - cctools 1024.3  # [osx]
     - libcxx {{ last_major }}
     - gcc_{{ target_platform }}      # [linux]
     - clangdev {{ last_major }}  # [osx]
@@ -46,10 +46,9 @@ outputs:
       run:
         - clang {{ last_major }}
         - llvm-tools {{ last_major }}
-        - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
-        - ld64 955.13  # [osx]     # Stage 2: ld64 now has clang 21.* constraint
-        # TODO: Re-enable after compiler-rt 21 is built
-        # - compiler-rt {{ version }}
+        - cctools 1024.3  # [osx]
+        - ld64 955.13  # [osx]
+        # - compiler-rt {{ version }}  # TODO: Re-enable after compiler-rt 21 is available in pkgs/main
         - compiler-rt_{{ cross_target_platform }}    # [linux]
         - gcc_impl_{{ target_platform }}       # [linux]
     test:
@@ -76,10 +75,10 @@ outputs:
     requirements:
       build:
         - {{ stdlib('c') }}
-        - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
+        - cctools 1024.3  # [osx]
       host:
         - clangxx {{ last_major }}
-        - libcxx {{ last_major }}         # [osx]
+        - libcxx {{ last_major }}  # [osx]
         - {{ pin_subpackage('clang_impl_' ~ cross_target_platform, exact=True) }}
         - gxx_impl_{{ target_platform }}  # [linux]
         # hack to force the solver to work
@@ -123,10 +122,10 @@ outputs:
     requirements:
       build:
         - {{ stdlib('c') }}
-        - cctools 1024.3  # [osx]  # Stage 2: cctools now has clang 21.* constraint
+        - cctools 1024.3  # [osx]
       host:
         - clangxx {{ last_major }}
-        - libcxx {{ last_major }}        # [cross_target_platform in ("osx-64", "osx-arm64")]
+        - libcxx {{ last_major }}  # [cross_target_platform in ("osx-64", "osx-arm64")]
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
         - {{ pin_subpackage('clangxx_' ~ cross_target_platform, exact=True) }}
         # hack to force the solver to work

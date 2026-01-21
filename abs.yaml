@@ -1,12 +1,9 @@
 build_parameters:
   - "--suppress-variables"
+  - "--error-overlinking"
 
-# Stage 2: Final build with cctools/ld64 re-enabled
-# Now that cctools has clang 21.* constraint, we can build complete activation packages
-staging_channel_upload_target: llvm-21.1.8-stage2-build-0
-
+# Staging channel needed for LLVM 21 dependencies until promoted to pkgs/main
 channels:
-  # Stage 2 channel has cctools/ld64 with clang 21.* constraint
   - https://staging.continuum.io/pbp/llvm-21.1.8-stage2-build-0
-  # Stage 0 channel has clangdev 21, llvm-tools 21, and supporting packages
-  - https://staging.continuum.io/pbp/llvm-21.1.8-stage0-build-0
+
+aggregate_check: false
