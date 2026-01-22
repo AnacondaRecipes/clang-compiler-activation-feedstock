@@ -33,7 +33,7 @@ requirements:
     - cctools 1024.3  # [osx]
     - libcxx {{ last_major }}
     - gcc_{{ target_platform }}      # [linux]
-    - clangdev {{ last_major }}  # [osx]
+    - clang {{ last_major }}  # [osx]
 
 outputs:
   - name: clang_impl_{{ cross_target_platform }}
@@ -143,11 +143,12 @@ outputs:
       ignore_run_exports_from:
         - libllvm{{ last_major }}
         - llvm-tools {{ last_major }}
+        - libcxx {{ last_major }}
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
         - {{ pin_subpackage('clangxx_' ~ cross_target_platform, exact=True) }}
       missing_dso_whitelist:
-        - lib/libLLVM-{{ last_major }}.dylib
-        - "*/lib/libc++.1.dylib"
+        - lib/libLLVM*.dylib
+        - lib/libc++*.dylib
         - lib/libicu*.dylib
         - lib/libz*.dylib
         - lib/libxml*.dylib
@@ -156,7 +157,7 @@ outputs:
         - lib/libiconv.*.dylib
         - lib/liblz4.*.dylib
         - lib/libffi.*.dylib
-        - lib/libclang-cpp.{{ last_major }}.dylib
+        - lib/libclang-cpp.*.dylib
       skip: true  # [win]
     test:
       commands:
