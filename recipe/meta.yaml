@@ -48,7 +48,7 @@ outputs:
         - llvm-tools {{ last_major }}
         - cctools 1024.3  # [osx]
         - ld64 955.13  # [osx]
-        # - compiler-rt {{ version }}  # TODO: Re-enable after compiler-rt 21 is available in pkgs/main
+        - compiler-rt {{ version }}
         - compiler-rt_{{ cross_target_platform }}    # [linux]
         - gcc_impl_{{ target_platform }}       # [linux]
     test:
