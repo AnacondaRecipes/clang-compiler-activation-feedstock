@@ -1,11 +1,11 @@
 {% if version is not defined %}
-{% set version = "20.1.8" %}
+{% set version = "21.1.8" %}
 {% endif %}
 {% set major_ver = version.split(".")[0] %}
 
-{% set build_number = 0 %}
+{% set build_number = 1 %}
 
-{% set last_major = "20" %}
+{% set last_major = "21" %}
 
 # Based heavily on commit ac43b49 in the conda-forge feedstock:
 # https://github.com/conda-forge/clang-compiler-activation-feedstock/tree/ac43b49
@@ -30,7 +30,7 @@ build:
 requirements:
   build:
     - {{ stdlib('c') }}
-    - cctools 1021.4  # [osx]
+    - cctools 1024.3  # [osx]
     - libcxx {{ last_major }}
     - gcc_{{ target_platform }}      # [linux]
     - clang {{ last_major }}  # [osx]
@@ -46,8 +46,8 @@ outputs:
       run:
         - clang {{ last_major }}
         - llvm-tools {{ last_major }}
-        - cctools 1021.4  # [osx]
-        - ld64 954.16  # [osx]
+        - cctools 1024.3  # [osx]
+        - ld64 955.13  # [osx]
         - compiler-rt {{ version }}
         - compiler-rt_{{ cross_target_platform }}    # [linux]
         - gcc_impl_{{ target_platform }}       # [linux]
@@ -75,10 +75,10 @@ outputs:
     requirements:
       build:
         - {{ stdlib('c') }}
-        - cctools 1021.4 # [osx]
+        - cctools 1024.3  # [osx]
       host:
         - clangxx {{ last_major }}
-        - libcxx {{ last_major }}         # [osx]
+        - libcxx {{ last_major }}  # [osx]
         - {{ pin_subpackage('clang_impl_' ~ cross_target_platform, exact=True) }}
         - gxx_impl_{{ target_platform }}  # [linux]
         # hack to force the solver to work
@@ -122,14 +122,16 @@ outputs:
     requirements:
       build:
         - {{ stdlib('c') }}
-        - cctools 1021.4  # [osx]
+        - cctools 1024.3  # [osx]
       host:
         - clangxx {{ last_major }}
-        - libcxx {{ last_major }}        # [cross_target_platform in ("osx-64", "osx-arm64")]
+        - libcxx {{ last_major }}  # [cross_target_platform in ("osx-64", "osx-arm64")]
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
         - {{ pin_subpackage('clangxx_' ~ cross_target_platform, exact=True) }}
         # hack to force the solver to work
         - libllvm{{ last_major }} {{ last_major }}
+        # dsymutil and other LLVM tools needed for clang to function properly
+        - llvm-tools {{ last_major }}
     build:
       always_include_files:
         - bin/
@@ -140,11 +142,13 @@ outputs:
         - share/
       ignore_run_exports_from:
         - libllvm{{ last_major }}
+        - llvm-tools {{ last_major }}
+        - libcxx {{ last_major }}
         - {{ pin_subpackage('clang_' ~ cross_target_platform, exact=True) }}
         - {{ pin_subpackage('clangxx_' ~ cross_target_platform, exact=True) }}
       missing_dso_whitelist:
-        - lib/libLLVM-{{ last_major }}.dylib
-        - "*/lib/libc++.1.dylib"
+        - lib/libLLVM*.dylib
+        - lib/libc++*.dylib
         - lib/libicu*.dylib
         - lib/libz*.dylib
         - lib/libxml*.dylib
@@ -153,7 +157,7 @@ outputs:
         - lib/libiconv.*.dylib
         - lib/liblz4.*.dylib
         - lib/libffi.*.dylib
-        - lib/libclang-cpp.{{ last_major }}.dylib
+        - lib/libclang-cpp.*.dylib
       skip: true  # [win]
     test:
       commands:
