@@ -3,6 +3,8 @@
 CHOST=${macos_machine}
 
 FINAL_CPPFLAGS="-D_FORTIFY_SOURCE=2"
+FINAL_CPPFLAGS="$FINAL_CPPFLAGS -DNDEBUG"
+
 FINAL_CFLAGS="-ftree-vectorize -fPIC -fstack-protector-strong -O2 -pipe"
 FINAL_CXXFLAGS="-ftree-vectorize -fPIC -fstack-protector-strong -O2 -pipe -stdlib=libc++ -fvisibility-inlines-hidden -fmessage-length=0"
 if [[ "${uname_machine}" == "x86_64" ]]; then
