@@ -1,11 +1,11 @@
 {% if version is not defined %}
-{% set version = "21.1.8" %}
+{% set version = "22.1.2" %}
 {% endif %}
 {% set major_ver = version.split(".")[0] %}
 
-{% set build_number = 2 %}
+{% set build_number = 0 %}
 
-{% set last_major = "21" %}
+{% set last_major = "22" %}
 
 # Based heavily on commit ac43b49 in the conda-forge feedstock:
 # https://github.com/conda-forge/clang-compiler-activation-feedstock/tree/ac43b49
@@ -30,7 +30,8 @@ build:
 requirements:
   build:
     - {{ stdlib('c') }}
-    - cctools 1024.3  # [osx]
+    # Stage 1: cctools disabled — has clang 21.* constraint, conflicts with clang 22
+    # - cctools 1030.6.3  # [osx]  # TODO: re-enable in Stage 2
     - libcxx {{ last_major }}
     - gcc_{{ target_platform }}      # [linux]
     - clang {{ last_major }}  # [osx]
@@ -46,10 +47,12 @@ outputs:
       run:
         - clang {{ last_major }}
         - llvm-tools {{ last_major }}
-        - cctools 1024.3  # [osx]
-        - ld64 955.13  # [osx]
-        - compiler-rt {{ version }}
-        - compiler-rt_{{ cross_target_platform }}    # [linux]
+        # Stage 1: cctools/ld64 disabled — has clang 21.* constraint
+        # - cctools 1030.6.3  # [osx]  # TODO: re-enable in Stage 2
+        # - ld64 956.6  # [osx]        # TODO: re-enable in Stage 2
+        # Stage 1: compiler-rt not built yet
+        # - compiler-rt {{ version }}                    # TODO: re-enable in Stage 2
+        # - compiler-rt_{{ cross_target_platform }}    # [linux]  # TODO: re-enable in Stage 2
         - gcc_impl_{{ target_platform }}       # [linux]
     test:
       commands:
@@ -75,7 +78,8 @@ outputs:
     requirements:
       build:
         - {{ stdlib('c') }}
-        - cctools 1024.3  # [osx]
+        # Stage 1: cctools disabled
+        # - cctools 1030.6.3  # [osx]  # TODO: re-enable in Stage 2
       host:
         - clangxx {{ last_major }}
         - libcxx {{ last_major }}  # [osx]
@@ -122,7 +126,8 @@ outputs:
     requirements:
       build:
         - {{ stdlib('c') }}
-        - cctools 1024.3  # [osx]
+        # Stage 1: cctools disabled
+        # - cctools 1030.6.3  # [osx]  # TODO: re-enable in Stage 2
       host:
         - clangxx {{ last_major }}
         - libcxx {{ last_major }}  # [cross_target_platform in ("osx-64", "osx-arm64")]
