@@ -3,7 +3,7 @@
 {% endif %}
 {% set major_ver = version.split(".")[0] %}
 
-{% set build_number = 0 %}
+{% set build_number = 1 %}
 
 {% set last_major = "22" %}
 
@@ -30,8 +30,7 @@ build:
 requirements:
   build:
     - {{ stdlib('c') }}
-    # Stage 1: cctools disabled — has clang 21.* constraint, conflicts with clang 22
-    # - cctools 1030.6.3  # [osx]  # TODO: re-enable in Stage 2
+    - cctools 1030.6.3  # [osx]
     - libcxx {{ last_major }}
     - gcc_{{ target_platform }}      # [linux]
     - clang {{ last_major }}  # [osx]
@@ -47,12 +46,11 @@ outputs:
       run:
         - clang {{ last_major }}
         - llvm-tools {{ last_major }}
-        # Stage 1: cctools/ld64 disabled — has clang 21.* constraint
-        # - cctools 1030.6.3  # [osx]  # TODO: re-enable in Stage 2
-        # - ld64 956.6  # [osx]        # TODO: re-enable in Stage 2
-        # Stage 1: compiler-rt not built yet
-        # - compiler-rt {{ version }}                    # TODO: re-enable in Stage 2
-        # - compiler-rt_{{ cross_target_platform }}    # [linux]  # TODO: re-enable in Stage 2
+        - cctools 1030.6.3  # [osx]
+        - ld64 956.6  # [osx]
+        # compiler-rt not built yet — re-enable after compiler-rt 22.1.2 is built
+        # - compiler-rt {{ version }}
+        # - compiler-rt_{{ cross_target_platform }}    # [linux]
         - gcc_impl_{{ target_platform }}       # [linux]
     test:
       commands:
@@ -78,8 +76,7 @@ outputs:
     requirements:
       build:
         - {{ stdlib('c') }}
-        # Stage 1: cctools disabled
-        # - cctools 1030.6.3  # [osx]  # TODO: re-enable in Stage 2
+        - cctools 1030.6.3  # [osx]
       host:
         - clangxx {{ last_major }}
         - libcxx {{ last_major }}  # [osx]
@@ -126,8 +123,7 @@ outputs:
     requirements:
       build:
         - {{ stdlib('c') }}
-        # Stage 1: cctools disabled
-        # - cctools 1030.6.3  # [osx]  # TODO: re-enable in Stage 2
+        - cctools 1030.6.3  # [osx]
       host:
         - clangxx {{ last_major }}
         - libcxx {{ last_major }}  # [cross_target_platform in ("osx-64", "osx-arm64")]
