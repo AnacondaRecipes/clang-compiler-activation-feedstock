@@ -3,7 +3,7 @@
 {% endif %}
 {% set major_ver = version.split(".")[0] %}
 
-{% set build_number = 1 %}
+{% set build_number = 2 %}
 
 {% set last_major = "22" %}
 
@@ -48,9 +48,8 @@ outputs:
         - llvm-tools {{ last_major }}
         - cctools 1030.6.3  # [osx]
         - ld64 956.6  # [osx]
-        # compiler-rt not built yet — re-enable after compiler-rt 22.1.2 is built
-        # - compiler-rt {{ version }}
-        # - compiler-rt_{{ cross_target_platform }}    # [linux]
+        - compiler-rt {{ version }}
+        - compiler-rt_{{ cross_target_platform }}    # [linux]
         - gcc_impl_{{ target_platform }}       # [linux]
     test:
       commands:
