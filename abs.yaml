@@ -2,11 +2,7 @@ build_parameters:
   - "--suppress-variables"
   - "--error-overlinking"
 
-# Stage 1: Create clang_bootstrap 22
-# clang_bootstrap is small (~50MB), safe for PBP staging (SIR-2834 only affects large files)
-staging_channel_upload_target: llvm22-stage1
-
-# Stage 0 packages (clangdev 22, llvmdev 22, libcxx 22) on anaconda.org
+# All LLVM 22 packages on anaconda.org (bypass PBP staging, SIR-2834)
 channels:
   - https://conda.anaconda.org/xkong-staging
 
