@@ -3,10 +3,12 @@
 {% endif %}
 {% set major_ver = version.split(".")[0] %}
 
-{% set build_number = 2 %}
+{% set build_number = 0 %}
 
 {% set last_major = "22" %}
 
+# First 22.1.2 release to pkgs/main; includes set -u safety fix in
+# activation scripts (credit: Ian Fitchet, PR #27).
 # Based heavily on commit ac43b49 in the conda-forge feedstock:
 # https://github.com/conda-forge/clang-compiler-activation-feedstock/tree/ac43b49
 
