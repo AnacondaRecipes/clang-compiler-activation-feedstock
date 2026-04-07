@@ -155,6 +155,7 @@ outputs:
         - lib/libz*.dylib
         - lib/libxml*.dylib
         - lib/libtapi.dylib
+        - bin/_lib/libtapi.dylib
         - lib/liblzma.*.dylib
         - lib/libiconv.*.dylib
         - lib/liblz4.*.dylib
