@@ -1,0 +1,19 @@
+anaconda_config_version: 1
+upstream_sources:
+  - github:
+      identifier: llvm/llvm-project
+      use_max_tag: true
+      include_regex: ^llvmorg-[\d.]+$
+      from_pattern: ^llvmorg-(.+)$
+      to_pattern: \1
+    packages:
+      - clang_impl_osx-64
+      - clang_impl_osx-arm64
+      - clang_osx-64
+      - clang_osx-arm64
+      - clangxx_impl_osx-64
+      - clangxx_impl_osx-arm64
+      - clangxx_osx-64
+      - clangxx_osx-arm64
+      - clang_bootstrap_osx-64
+      - clang_bootstrap_osx-arm64
