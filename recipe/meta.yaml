@@ -166,11 +166,13 @@ outputs:
         - {{ macos_machine }}-clang++ --version
     about:
       home: https://llvm.org
-      license: Apache-2.0
+      license: Apache-2.0 WITH LLVM-exception
       license_family: Apache
       license_file: LLVM_LICENSE.txt
       summary: clang compiler components in one package for bootstrapping clang
       description: Bootstrap package containing both C and C++ Clang compilers for building Clang itself
+      dev_url: https://github.com/llvm/llvm-project
+      doc_url: https://llvm.org/docs/
   
 
 about:
@@ -189,5 +191,3 @@ extra:
     - mingwandroid
     - katietz
     - h-vetinari
-  skip-lints:
-    - missing_tests
