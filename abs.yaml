@@ -1,6 +1,0 @@
-# PR CI only - LLVM 23.1.4 dependencies not yet on pkgs/main; REMOVE before merge:
-# compiler-rt (AnacondaRecipes/compiler-rt-feedstock#16, head 47512fe),
-# cctools-and-ld64 build 2 (AnacondaRecipes/cctools-and-ld64-feedstock#21, head 827eedf)
-channels:
-  - https://package-build.internal.anaconda.com/pkg-orchestrator/v1/channels/graphs/f2625317-1f59-4a30-bc11-94647d64853e
-  - https://package-build.internal.anaconda.com/pkg-orchestrator/v1/channels/graphs/54c20654-9a0a-427e-9ab8-017b11fe302f
