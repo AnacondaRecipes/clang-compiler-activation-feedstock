@@ -2,17 +2,6 @@ CBUILD:
   - x86_64-apple-darwin13.4.0    # [osx and x86_64]
   - arm64-apple-darwin20.0.0     # [osx and arm64]
 
-c_compiler:           # [osx]
-  - clang_bootstrap   # [osx]
-cxx_compiler:         # [osx]
-  - clang_bootstrap   # [osx]
-
-# Stage 1: Use LLVM 21 compiler (clang_bootstrap 22 doesn't exist yet)
-c_compiler_version:
-  - 21.1.8             # [osx]
-cxx_compiler_version:
-  - 21.1.8             # [osx]
-
 cross_target_platform:
   - osx-64     # [osx and x86_64]
   - osx-arm64  # [osx and arm64]
